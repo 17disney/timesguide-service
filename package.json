@@ -4,12 +4,19 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
     "crypto": "^1.0.1",
     "egg": "^2.2.1",
     "egg-redis": "^2.0.0",
     "egg-scripts": "^2.5.0",
     "egg-sequelize": "^3.1.2",
-    "mysql": "^2.15.0"
+    "egg-session-redis": "^1.0.0",
+    "egg-validate": "^1.0.0",
+    "egg-weapp-sdk": "^1.1.1",
+    "install": "^0.11.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
+    "npm": "^5.8.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",

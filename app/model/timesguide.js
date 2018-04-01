@@ -1,22 +1,35 @@
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN } = app.Sequelize
-  
+
   const Timesguide = app.model.define(
-    'timesguide',
+    'ds_timesguide',
     {
-      name: {
-        type: STRING(100),
-        unique: true,
-        allowNull: false
+      start_date: STRING(255),
+      end_date: STRING(255),
+      local: STRING(20),
+      rate: {
+        type: INTEGER,
+        defaultValue: 0
       },
-      startDate: STRING(255),
-      endDate: STRING(255),
-      author: STRING(255)
+      author: STRING(255),
+      have_num: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      available: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      is_show: {
+        type: BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      }
     },
     {
       indexes: [
         {
-          fields: ['name']
+          fields: ['start_date']
         }
       ]
     }

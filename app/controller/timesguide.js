@@ -5,9 +5,9 @@ const Controller = require('egg').Controller
 class TimesguideController extends Controller {
   async list() {
     const { ctx } = this
-
-    const list = await ctx.model.timesguide.find()
-
+    // console.log(ctx.model)
+    const list = await ctx.model.Timesguide.findAll()
+    // ctx.body = ctx.model
     ctx.body = list
   }
   async id() {
