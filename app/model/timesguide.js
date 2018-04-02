@@ -12,11 +12,16 @@ module.exports = app => {
         defaultValue: 0
       },
       author: STRING(255),
+      pic_name: STRING(255),
       have_num: {
         type: INTEGER,
         defaultValue: 0
       },
       available: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      exchange_num: {
         type: INTEGER,
         defaultValue: 0
       },

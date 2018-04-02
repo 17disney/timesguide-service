@@ -14,6 +14,10 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 0
       },
+      mark: {
+        type: INTEGER,
+        defaultValue: 0
+      },
       is_verify: {
         type: BOOLEAN,
         allowNull: false,

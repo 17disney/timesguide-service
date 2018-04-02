@@ -18,7 +18,7 @@ module.exports = app => {
   // router.get('/exchange/release', controller.exchange.release);
   // router.get('/exchange/demand', controller.exchange.demand);
 
-  router.get('/timesguides/:local', controller.timesguide.list)
+  router.get('/timesguide', controller.timesguide.list)
   router.get('/timesguide/:id', controller.timesguide.id)
   router.put('/timesguide/:id', controller.timesguide.uploadId)
   // router.get('/download/:id', controller.download.download);

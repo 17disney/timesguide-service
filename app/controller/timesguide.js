@@ -5,8 +5,15 @@ const Controller = require('egg').Controller
 class TimesguideController extends Controller {
   async list() {
     const { ctx } = this
-    // console.log(ctx.model)
-    const list = await ctx.model.Timesguide.findAll()
+    const { local } = ctx.query
+    const list = await ctx.model.Timesguide.findAll({
+      where: [
+        {
+          local
+        }
+      ],
+      order: [['start_date', 'ASC']]
+    })
     // ctx.body = ctx.model
     ctx.body = list
   }
