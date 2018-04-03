@@ -30,8 +30,15 @@ module.exports = appInfo => {
   config.weappSDK = {
     appId: '', // your weapp appId
     appSecret: '', // weapp appSecret
-  };
+  }
 
+
+  config.security = {
+    csrf: {
+      enable: false,
+    }
+  }
+ 
   // add your config here
   config.middleware = []
 

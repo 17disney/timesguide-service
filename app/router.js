@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * @param {Egg.Application} app - egg application
  */
@@ -8,18 +6,22 @@ module.exports = app => {
   router.get('/', controller.home.index)
 
   router.get('/login', controller.user.login);
-  // router.get('/user', controller.user.info);
-  // router.put('/user', controller.home.userEdit);
+  router.get('/user', controller.user.user);
+  router.get('/cos_auth', controller.user.cos_auth);
 
-  router.get('/user/:id/timesguide', controller.timesguide.userList)
-  router.put('/user/:id/timesguide/:tid', controller.timesguide.userUploadTid)
+  router.get('/user/:userid/timesguides', controller.user.timesguides)
+  router.get('/user/:userid', controller.user.user)
 
-  // router.get('/exchange/list', controller.exchange.list);
-  // router.get('/exchange/release', controller.exchange.release);
-  // router.get('/exchange/demand', controller.exchange.demand);
+  router.get('/v1/exchanges', controller.exchange.list);
+  router.post('/v1/exchanges', controller.exchange.create);
+  router.get('/v1/exchanges/:id', controller.exchange.id)
+  router.post('/v1/exchanges/:tid', controller.exchange.deal)
 
-  router.get('/timesguide', controller.timesguide.list)
-  router.get('/timesguide/:id', controller.timesguide.id)
-  router.put('/timesguide/:id', controller.timesguide.uploadId)
-  // router.get('/download/:id', controller.download.download);
+  router.post('/v1/exchanges/:id/disney-friend', controller.exchange.disneyFirend)
+  router.post('/v1/exchanges/:id/users', controller.exchange.users)
+
+  router.get('/timesguides', controller.timesguide.list)
+  router.post('/timesguides', controller.timesguide.create)
+  router.get('/timesguides/:id', controller.timesguide.id)
+  router.put('/timesguides/:id', controller.timesguide.uploadId)
 }

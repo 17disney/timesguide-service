@@ -1,64 +1,92 @@
-'use strict';
+const Service = require('egg').Service
+const uuid = require('../utils/uuid')
 
-module.exports = app => {
-  class UserService extends app.Service {
-
-    constructor(ctx) {
-      super(ctx);
-      this.models = this.ctx.model;
-    }
-
-    * checkWeappUser() {
-      const { app, request, response } = this.ctx;
-      const loginService = app.weapp.LoginService.create(request, response);
-      const weapp_user = yield loginService.check();
-      return weapp_user.userInfo;
-    }
-
-    * getOauthUser(userInfo, site = 'WEAPP') {
-      const oauth_user = yield this.models.SocialOauth.findOne({
-        where: {
-          site_uid: userInfo.openId,
-        },
-      });
-      if (!oauth_user) {
-        const user = yield this.createUser(site, userInfo);
-        return user;
-      }
-      const user = yield this.models.User.findOne({
-        attributes: ['id', 'name', 'avatar'],
-        where: {
-          id: oauth_user.userId,
-        },
-      });
-      user.oauth = oauth_user;
-      return user;
-    }
-
-    * createUser(site, userInfo) {
-      const user = yield this.models.User.create({
-        name: userInfo.nickName,
-        avatar: userInfo.avatarUrl,
-      });
-      const oauth = yield this.models.SocialOauth.create({
-        site,
-        site_uid: userInfo.openId,
-        site_uname: userInfo.nickName,
-        unionid: userInfo.unionId,
-        userId: user.id,
-      });
-      yield this.models.Userprofile.create({
-        sex: userInfo.gender,
-        city: userInfo.city,
-        province: userInfo.province,
-        country: userInfo.country,
-        userId: user.id,
-      });
-      user.oauth = oauth;
-      return user;
-
-    }
-
+class UserService extends Service {
+  constructor(ctx) {
+    super(ctx)
+    this.models = this.ctx.model
   }
-  return UserService;
-};
+
+  // 检查登录
+  async checkWeappUser() {
+    const { app, request, response } = this.ctx
+    const loginService = app.weapp.LoginService.create(request, response)
+    const weapp_user = await loginService.check()
+
+    // const { openId } = weapp_user.userInfo
+
+    // const userInfo = await this.models.SocialOauth.findOne({
+    //   attributes: ['userid'],
+    //   where: {
+    //     site_uid: openId
+    //   }
+    // })
+
+    const user = await this.getOauthUser(weapp_user.userInfo)
+
+    const Info = Object.assign(
+      {
+        name: user.name,
+        avatar: user.avatar,
+        level: user.level,
+        userid: user.userid
+      },
+      weapp_user.userInfo
+    )
+
+    return Info
+  }
+
+  // oauth 获取用户
+  async getOauthUser(userInfo, site = 'WEAPP') {
+    const oauth_user = await this.models.SocialOauth.findOne({
+      where: {
+        site_uid: userInfo.openId
+      }
+    })
+
+    // 无用户则创建
+    if (!oauth_user) {
+      userInfo.userid = uuid()
+
+      const user = await this.createUser(site, userInfo)
+      return user
+    }
+    const user = await this.models.User.findOne({
+      attributes: ['name', 'avatar', 'level', 'userid'],
+      where: {
+        userid: oauth_user.userid
+      }
+    })
+    user.oauth = oauth_user
+    return user
+  }
+
+  async createUser(site, userInfo) {
+    // const userid = uuid()
+    const user = await this.models.User.create({
+      name: userInfo.nickName,
+      avatar: userInfo.avatarUrl,
+      userid: userInfo.userid
+    })
+
+    const oauth = await this.models.SocialOauth.create({
+      site,
+      site_uid: userInfo.openId,
+      site_uname: userInfo.nickName,
+      unionid: userInfo.unionId,
+      userid: userInfo.userid
+    })
+    // await this.models.Userprofile.create({
+    //   sex: userInfo.gender,
+    //   city: userInfo.city,
+    //   province: userInfo.province,
+    //   country: userInfo.country,
+    //   userid
+    // })
+    user.oauth = oauth
+    return user
+  }
+}
+
+module.exports = UserService

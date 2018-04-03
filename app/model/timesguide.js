@@ -1,43 +1,58 @@
+const moment = require('moment')
+
 module.exports = app => {
-  const { STRING, TEXT, INTEGER, BOOLEAN } = app.Sequelize
+  const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
   const Timesguide = app.model.define(
-    'ds_timesguide',
+    'timesguides',
     {
-      start_date: STRING(255),
-      end_date: STRING(255),
+      startDate: DATE,
+      endDate: DATE,
       local: STRING(20),
       rate: {
         type: INTEGER,
         defaultValue: 0
       },
-      author: STRING(255),
-      pic_name: STRING(255),
-      have_num: {
+      authorid: STRING(255),
+      picName: STRING(255),
+      haveNum: {
         type: INTEGER,
         defaultValue: 0
       },
-      available: {
+      exchangeNum: {
         type: INTEGER,
         defaultValue: 0
-      },
-      exchange_num: {
-        type: INTEGER,
-        defaultValue: 0
-      },
-      is_show: {
-        type: BOOLEAN,
-        allowNull: false,
-        defaultValue: true
       }
     },
     {
       indexes: [
         {
-          fields: ['start_date']
+          fields: ['startDate']
+        },
+        {
+          fields: ['created_at']
+        },
+        {
+          fields: ['authorid']
+        },
+        {
+          fields: ['local']
         }
-      ]
+      ],
+      getterMethods: {
+        picUrl() {
+          return 'http://17disney.com/images/timesguide/' + this.picName
+        }
+      }
     }
   )
+
+  Timesguide.associate = function() {
+    app.model.Timesguide.hasMany(app.model.Exchange, {
+      as: 'exchanges',
+      foreignKey: 'tid'
+    })
+  }
+
   return Timesguide
 }
