@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
@@ -19,7 +21,13 @@ module.exports = app => {
       },
       targetLocal: STRING(20)
     },
-    { underscored: false }
+    {
+      getterMethods: {
+        createAt() {
+          return moment(this.create_at).format('YYYY-MM-DD HH:mm:ss')
+        }
+      }
+    }
   )
 
   Started.associate = function() {

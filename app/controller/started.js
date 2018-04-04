@@ -7,14 +7,11 @@ class startedController extends Controller {
     const { ctx } = this
     const { targetType, tid, targetLocal, targetTid } = ctx.request.body
 
-    const userInfo = await ctx.service.user.checkWeappUser()
-
-    const { userid } = userInfo
-
+    const user = await ctx.service.user.checkWeappUser()
     const create = {
       id: uuid(),
       tid,
-      userid,
+      userid: user.id,
       targetType,
       targetLocal,
       targetTid

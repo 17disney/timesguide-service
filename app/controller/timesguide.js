@@ -14,19 +14,23 @@ class TimesguideController extends Controller {
   }
 
   async id() {
-    const {ctx} = this
-    const {id} = ctx.params
+    const { ctx } = this
+    const { id } = ctx.params
     const data = await ctx.model.Timesguide.findOne({
       where: {
         id
-      }
+      },
+      include: [
+        {
+          model: ctx.model.User,
+          attributes: ['id', 'avatar', 'name']
+        }
+      ]
     })
     this.ctx.body = data
   }
 
-  async create() {
- 
-  }
+  async create() {}
 
   async uploadId() {
     const { ctx } = this

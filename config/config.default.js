@@ -12,7 +12,8 @@ module.exports = appInfo => {
     host: 'localhost',
     port: '3306',
     username: 'root',
-    password: 'root'
+    password: 'root',
+    timezone: '+08:00'
   }
 
   config.qiniu = {

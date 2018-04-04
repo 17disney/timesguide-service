@@ -4,8 +4,11 @@ const DEAL_TYPE = {
   FRIEND: 3
 }
 
+const MAX_GIVE = 10
+
 module.exports = {
-  DEAL_TYPE
+  DEAL_TYPE,
+  MAX_GIVE
 }
 
 /* ## 积分管理

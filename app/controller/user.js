@@ -52,10 +52,58 @@ class userController extends Controller {
     ctx.body = list
   }
 
+  async contributes() {
+    const { ctx } = this
+    const { userid } = ctx.params
+
+    const list = await ctx.model.Contribute.findAll({
+      where: {
+        userid
+      },
+      order: [['created_at', 'DESC']]
+    })
+    ctx.body = list
+  }
+
+  async starteds() {
+    const { ctx } = this
+    const { userid } = ctx.params
+
+    const list = await ctx.model.Started.findAll({
+      where: {
+        userid
+      },
+      order: [['created_at', 'DESC']]
+    })
+    ctx.body = list
+  }
+
+  async messages() {
+    const { ctx } = this
+    const { userid } = ctx.params
+
+    const list = await ctx.model.Message.findAll({
+      where: {
+        userid
+      },
+      order: [['created_at', 'DESC']]
+    })
+    ctx.body = list
+  }
+
+
+  async info() {
+    const { ctx } = this
+    const {userid} = ctx.params
+    ctx.body = await ctx.service.user.getUserinfo(userid)
+  }
+
   async user() {
     const { ctx } = this
+    const {userid} = ctx.params
+
     const user = await ctx.service.user.checkWeappUser()
-    ctx.body = user
+    ctx.body = await ctx.service.user.getUserinfo(user.id)
   }
 
   async cos_auth() {

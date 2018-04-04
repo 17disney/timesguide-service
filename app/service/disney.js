@@ -15,6 +15,27 @@ class DisneyFriendService extends Service {
     }
     return nData
   }
+
+  async getAll() {
+    const { ctx } = this
+    const data = []
+
+    firendList.forEach(item => {
+      const { id, name, media } = item
+      const create = {
+        id,
+        name,
+        avatar: media.avatarMobileSquare['url'],
+        level: 99
+      }
+
+      data.push(create)
+
+      ctx.model.User.create(create)
+    })
+
+    return data
+  }
 }
 
 module.exports = DisneyFriendService

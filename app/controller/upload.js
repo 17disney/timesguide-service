@@ -8,11 +8,10 @@ class UploadController extends Controller {
 
     const accessKey = app.config.qiniu.accessKey
     const secretKey = app.config.qiniu.secretKey
-
     const mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
 
     const options = {
-      scope: app.config.qiniu.qiniu_bucket
+      scope: app.config.qiniu.bucket
     }
 
     const putPolicy = new qiniu.rs.PutPolicy(options)

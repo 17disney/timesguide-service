@@ -9,12 +9,10 @@ class contributeController extends Controller {
 
     const userInfo = await ctx.service.user.checkWeappUser()
 
-    const { userid } = userInfo
-
     const create = {
       id: uuid(),
       tid,
-      userid,
+      userid: userInfo.id,
       type,
       startDate,
       endDate,

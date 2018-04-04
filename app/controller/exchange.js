@@ -1,5 +1,5 @@
 const Controller = require('egg').Controller
-const { DEAL_TYPE } = require('../utils/const')
+const { DEAL_TYPE, MAX_GIVE } = require('../utils/const')
 const uuid = require('../utils/uuid')
 
 class ExchangeController extends Controller {
@@ -10,27 +10,47 @@ class ExchangeController extends Controller {
     this.ctx.body = 'hi, egg'
   }
 
+  async friends() {
+    const { ctx } = this
+    ctx.body = await ctx.service.disney.getAll()
+  }
+
   // 交易
   async deal() {
     const { ctx } = this
     const { tid } = ctx.params
-    const { type } = ctx.request.body
 
-    const userInfo = await ctx.service.user.checkWeappUser()
+    const user = await ctx.service.user.checkWeappUser()
+    const userid = user.id
+
+    // 检查已领取的数量
+    const exchangeCount = await ctx.model.Exchange.count({
+      where: {
+        userid,
+        tid,
+        targetTid: null
+      }
+    })
+
     const targetInfo = await ctx.service.disney.getRandom()
+    const available = MAX_GIVE - exchangeCount
 
-    const { userid } = userInfo
+    if (available === -1) {
+      ctx.body = { available }
+      return
+    }
 
     const create = {
       id: uuid(),
-      tid,
       userid,
-      type,
-      targetid: targetInfo['id'],
+      tid,
+      type: 1,
+      targetUserid: targetInfo['id'],
       status: 1
     }
-
     await ctx.model.Exchange.create(create)
+
+    create.available = available
     ctx.body = create
   }
 

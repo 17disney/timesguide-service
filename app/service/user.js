@@ -32,7 +32,7 @@ class UserService extends Service {
   async getOauthUser(userInfo, site = 'WEAPP') {
     const oauth_user = await this.models.SocialOauth.findOne({
       where: {
-        site_uid: userInfo.id
+        site_uid: userInfo.openId
       }
     })
 
@@ -43,14 +43,49 @@ class UserService extends Service {
       const user = await this.createUser(site, userInfo)
       return user
     }
+
+    // 读取用户资料
     const user = await this.models.User.findOne({
       attributes: ['name', 'avatar', 'level'],
       where: {
-        id: oauth_user.id
+        id: oauth_user.userid
       }
     })
+
     user.oauth = oauth_user
+    user.id = oauth_user.userid
     return user
+  }
+
+  async getUserinfo(userid) {
+    const user = await this.models.User.findOne({
+      where: {
+        id: userid
+      }
+    })
+
+    const userprofile = await this.models.Userprofile.findOne({
+      where: {
+        userid
+      }
+    })
+
+    let { sex, city, province, country, aboutMe, birthday } = userprofile
+    let { id, name, avatar } = user
+
+    const User = {
+      id,
+      name,
+      avatar,
+      sex,
+      city,
+      province,
+      country,
+      aboutMe,
+      birthday
+    }
+
+    return User
   }
 
   async createUser(site, userInfo) {
@@ -68,7 +103,7 @@ class UserService extends Service {
       unionid: userInfo.unionId,
       userid: userInfo.id
     })
-    
+
     await this.models.Userprofile.create({
       sex: userInfo.gender,
       city: userInfo.city,
