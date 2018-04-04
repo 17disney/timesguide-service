@@ -13,15 +13,6 @@ class UserService extends Service {
     const loginService = app.weapp.LoginService.create(request, response)
     const weapp_user = await loginService.check()
 
-    // const { openId } = weapp_user.userInfo
-
-    // const userInfo = await this.models.SocialOauth.findOne({
-    //   attributes: ['userid'],
-    //   where: {
-    //     site_uid: openId
-    //   }
-    // })
-
     const user = await this.getOauthUser(weapp_user.userInfo)
 
     const Info = Object.assign(
@@ -29,7 +20,7 @@ class UserService extends Service {
         name: user.name,
         avatar: user.avatar,
         level: user.level,
-        userid: user.userid
+        id: user.id
       },
       weapp_user.userInfo
     )
@@ -41,21 +32,21 @@ class UserService extends Service {
   async getOauthUser(userInfo, site = 'WEAPP') {
     const oauth_user = await this.models.SocialOauth.findOne({
       where: {
-        site_uid: userInfo.openId
+        site_uid: userInfo.id
       }
     })
 
     // 无用户则创建
     if (!oauth_user) {
-      userInfo.userid = uuid()
+      userInfo.id = uuid()
 
       const user = await this.createUser(site, userInfo)
       return user
     }
     const user = await this.models.User.findOne({
-      attributes: ['name', 'avatar', 'level', 'userid'],
+      attributes: ['name', 'avatar', 'level'],
       where: {
-        userid: oauth_user.userid
+        id: oauth_user.id
       }
     })
     user.oauth = oauth_user
@@ -67,7 +58,7 @@ class UserService extends Service {
     const user = await this.models.User.create({
       name: userInfo.nickName,
       avatar: userInfo.avatarUrl,
-      userid: userInfo.userid
+      id: userInfo.id
     })
 
     const oauth = await this.models.SocialOauth.create({
@@ -75,15 +66,16 @@ class UserService extends Service {
       site_uid: userInfo.openId,
       site_uname: userInfo.nickName,
       unionid: userInfo.unionId,
-      userid: userInfo.userid
+      userid: userInfo.id
     })
-    // await this.models.Userprofile.create({
-    //   sex: userInfo.gender,
-    //   city: userInfo.city,
-    //   province: userInfo.province,
-    //   country: userInfo.country,
-    //   userid
-    // })
+    
+    await this.models.Userprofile.create({
+      sex: userInfo.gender,
+      city: userInfo.city,
+      province: userInfo.province,
+      country: userInfo.country,
+      userid: userInfo.id
+    })
     user.oauth = oauth
     return user
   }

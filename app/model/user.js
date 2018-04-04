@@ -6,7 +6,10 @@ module.exports = app => {
   const User = app.model.define(
     'user',
     {
-      userid: STRING(255),
+      id: {
+        type: STRING(255),
+        primaryKey: true
+      },
       name: {
         type: STRING(32),
         allowNull: false
@@ -17,31 +20,41 @@ module.exports = app => {
           isEmail: true
         }
       },
-      password: {
-        type: STRING(60),
-        validate: {
-          len: [6, 60]
-        }
-      },
-      is_active: {
-        type: INTEGER,
-        defaultValue: true
-      },
       avatar: {
         type: STRING(255),
         validate: {
           isUrl: true
         }
       },
-      level: INTEGER,
-      markNum: {
-        type: INTEGER
+      password: {
+        type: STRING(60),
+        validate: {
+          len: [6, 60]
+        }
       },
-      exchangeNum: {
-        type: INTEGER
+      status: {
+        type: INTEGER,
+        defaultValue: 1
       },
-      contributeNum: {
-        type: INTEGER
+      level: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      mark: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      exchange: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      contribute: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      contribute: {
+        type: INTEGER,
+        defaultValue: 0
       }
     },
     {
@@ -52,22 +65,7 @@ module.exports = app => {
         {
           fields: ['email']
         }
-      ],
-      // classMethods: {
-      //   associate() {
-      //     User.hasOne(app.model.Userprofile)
-      //     User.hasMany(app.model.SocialOauth)
-      //     User.hasMany(app.model.Post)
-      //     User.hasMany(app.model.PostComment)
-      //     User.hasMany(app.model.PostLike)
-      //     User.hasMany(app.model.PostFeedback)
-      //     User.belongsToMany(app.model.School, {
-      //       as: 'Incharges',
-      //       through: 'school_managers',
-      //       foreignKey: 'schoolId'
-      //     })
-      //   }
-      // },
+      ]
       // instanceMethods: {
       //   comparePassword(candidatePassword, callback) {
       //     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {

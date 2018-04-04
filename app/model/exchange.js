@@ -1,6 +1,12 @@
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
+  const STATUS = {
+    DELETED: 0,
+    HAVE: 1,
+    SELL: 2
+  }
+
   const Exchange = app.model.define(
     'exchanges',
     {
@@ -8,40 +14,25 @@ module.exports = app => {
         type: STRING(255),
         primaryKey: true
       },
-      type: {
-        type: INTEGER,
-        allowNull: false
-      },
-      // tid: {
-      //   type: STRING(255),
-      //   allowNull: false
-      // },
-      userid: {
-        type: STRING(255),
-        allowNull: false
-      },
-      targetid: {
-        type: STRING(255),
-        allowNull: false
-      },
       status: {
         type: INTEGER,
-        allowNull: false
+        default: STATUS.HAVE
       }
     }
-    // {
-    //   indexes: [
-    //     {
-    //       fields: ['userid']
-    //     }
-    //   ]
-    // }
   )
 
   Exchange.associate = function() {
     app.model.Exchange.belongsTo(app.model.Timesguide, {
-      as: 'timesguides',
       foreignKey: 'tid'
+    }),
+    app.model.Exchange.belongsTo(app.model.Timesguide, {
+      foreignKey: 'targetTid'
+    }),
+    app.model.Exchange.belongsTo(app.model.User, {
+      foreignKey: 'userid'
+    }),
+    app.model.Exchange.belongsTo(app.model.User, {
+      foreignKey: 'targetUserid'
     })
   }
 

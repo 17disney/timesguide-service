@@ -1,32 +1,28 @@
-'use strict';
+'use strict'
 
 module.exports = app => {
-  const { STRING, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize
   const SEX_TAG = {
     UNKNOWN: 0,
     MALE: 1,
-    FEMALE: 2,
-  };
+    FEMALE: 2
+  }
 
   const Userprofile = app.model.define('userprofile', {
-    userid: STRING(255),
     sex: {
       type: INTEGER,
-      defaultValue: SEX_TAG.UNKNOWN,
+      defaultValue: SEX_TAG.UNKNOWN
     },
     city: STRING(32),
     province: STRING(32),
     country: STRING(32),
-    about_me: STRING(255),
-    level: INTEGER
-  }, {
-    // classMethods: {
-    //   associate() {
-    //     Userprofile.belongsTo(app.model.User);
-    //   },
-    // },
-  });
-
-  return Userprofile;
-
-};
+    aboutMe: STRING(255),
+    birthday: STRING(20)
+  })
+  Userprofile.associate = function() {
+    app.model.Userprofile.belongsTo(app.model.User, {
+      foreignKey: 'userid'
+    })
+  }
+  return Userprofile
+}

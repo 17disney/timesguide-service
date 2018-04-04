@@ -13,7 +13,6 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 0
       },
-      authorid: STRING(255),
       picName: STRING(255),
       haveNum: {
         type: INTEGER,
@@ -30,18 +29,20 @@ module.exports = app => {
           fields: ['startDate']
         },
         {
-          fields: ['created_at']
-        },
-        {
-          fields: ['authorid']
-        },
-        {
           fields: ['local']
+        },
+        {
+          fields: ['created_at']
         }
       ],
       getterMethods: {
         picUrl() {
           return 'http://17disney.com/images/timesguide/' + this.picName
+        },
+        dateRang() {
+          const startDate = moment(this.startDate).format('YYYY.MM.DD')
+          const endDate = moment(this.endDate).format('MM.DD')
+          return startDate + '-' + endDate
         }
       }
     }
@@ -49,8 +50,16 @@ module.exports = app => {
 
   Timesguide.associate = function() {
     app.model.Timesguide.hasMany(app.model.Exchange, {
-      as: 'exchanges',
       foreignKey: 'tid'
+    })
+    app.model.Timesguide.hasMany(app.model.Contribute, {
+      foreignKey: 'tid'
+    })
+    app.model.Timesguide.hasMany(app.model.Started, {
+      foreignKey: 'tid'
+    })
+    app.model.Timesguide.belongsTo(app.model.User, {
+      foreignKey: 'userid'
     })
   }
 
