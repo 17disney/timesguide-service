@@ -14,11 +14,19 @@ module.exports = app => {
         defaultValue: 0
       },
       picName: STRING(255),
-      haveNum: {
+      have: {
         type: INTEGER,
         defaultValue: 0
       },
-      exchangeNum: {
+      exchange: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      contribute: {
+        type: INTEGER,
+        defaultValue: 0
+      },
+      started: {
         type: INTEGER,
         defaultValue: 0
       }
@@ -37,7 +45,7 @@ module.exports = app => {
       ],
       getterMethods: {
         picUrl() {
-          return 'http://17disney.com/images/timesguide/' + this.picName
+          return 'http://17disney.com/images/timesguide/' + this.pic_name
         },
         dateRang() {
           const startDate = moment(this.startDate).format('YYYY.MM.DD')

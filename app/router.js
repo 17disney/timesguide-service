@@ -23,6 +23,8 @@ module.exports = app => {
   router.post('/v1/starteds', controller.started.create)
   router.post('/v1/contributes', controller.contribute.create)
 
+  router.get('/v1/upload/token', controller.upload.token)
+
 
   router.get('/timesguides', controller.timesguide.list)
   router.post('/timesguides', controller.timesguide.create)

@@ -15,6 +15,13 @@ module.exports = appInfo => {
     password: 'root'
   }
 
+  config.qiniu = {
+    accessKey: '',
+    secretKey: '',
+    bucket: ''
+  }
+
+
   config.redis = {
     client: {
       host: '127.0.0.1',

@@ -6,17 +6,21 @@ module.exports = app => {
     NOT_HAVE: 2,
     APPOINT: 3
   }
-  const Started = app.model.define('starteds', {
-    id: {
-      type: STRING(255),
-      primaryKey: true
+  const Started = app.model.define(
+    'starteds',
+    {
+      id: {
+        type: STRING(255),
+        primaryKey: true
+      },
+      targetType: {
+        type: INTEGER,
+        defaultValue: TARGET_TYPE.ALL
+      },
+      targetLocal: STRING(20)
     },
-    targetType: {
-      type: INTEGER,
-      defaultValue: TARGET_TYPE.ALL
-    },
-    targetLocal: STRING(20)
-  })
+    { underscored: false }
+  )
 
   Started.associate = function() {
     app.model.Started.belongsTo(app.model.Timesguide, {
