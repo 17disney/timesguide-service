@@ -31,7 +31,7 @@ class DisneyFriendService extends Service {
 
       data.push(create)
 
-      ctx.model.User.create(create)
+      // ctx.model.User.create(create)
     })
 
     return data

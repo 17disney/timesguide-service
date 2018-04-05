@@ -55,10 +55,29 @@ class ExchangeController extends Controller {
     ctx.body = create
   }
 
-  async disneyFirend() {}
-
   async create() {
-    this.ctx.body = 'hi, egg'
+    const { ctx } = this
+    const {
+      id,
+      tid,
+      type,
+      targetUserid,
+      targetTid,
+      targetId
+    } = ctx.request.body
+
+    const arg = {
+      id,
+      tid,
+      type,
+      targetUserid,
+      targetTid,
+      targetId
+    }
+
+    const data = await ctx.model.Exchange.create(arg)
+
+    ctx.body = data
   }
   async users() {
     this.ctx.body = 'hi, egg'

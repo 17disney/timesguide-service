@@ -14,7 +14,11 @@ module.exports = app => {
         type: STRING(255),
         primaryKey: true
       },
-      targetId: {
+      eid: {
+        type: STRING(255),
+        allowNull: false
+      },
+      targetEid: {
         type: STRING(255)
       },
       status: {

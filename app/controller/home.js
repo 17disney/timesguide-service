@@ -11,11 +11,11 @@ class HomeController extends Controller {
 
     // await ctx.model.Message.sync({ force: true })
     // await ctx.model.Timesguide.sync({ force: true })
-    // await ctx.model.Exchange.sync({ force: true })
+    await ctx.model.Exchange.sync({ force: true })
     // await ctx.model.Started.sync({ force: true })
     // await ctx.model.Contribute.sync({ force: true })
 
-    ctx.body = 'hi, egg'
+    ctx.body = '17disney-timesguide-service'
   }
 }
 

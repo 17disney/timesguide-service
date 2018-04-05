@@ -66,6 +66,24 @@ class TimesguideController extends Controller {
     )
     ctx.body = { id }
   }
+
+  async starteds() {
+    const { ctx } = this
+    const { id } = ctx.params
+    const { status = 1 } = ctx.query
+    const data = await ctx.model.Started.findAll({
+      where: {
+        status,
+        tid: id
+      },
+      include: [{
+        model: ctx.model.User,
+        attributes: ['id', 'avatar', 'name']
+      }]
+    })
+    ctx.body = data
+  }
+
   async userList() {
     this.ctx.body = 'hi, egg'
   }

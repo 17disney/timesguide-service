@@ -8,6 +8,13 @@ module.exports = app => {
     NOT_HAVE: 2,
     APPOINT: 3
   }
+
+  const STATUS = {
+    CLOSE: 0,
+    OPEN: 1,
+    FINISH: 2
+  }
+
   const Started = app.model.define(
     'starteds',
     {
@@ -18,6 +25,10 @@ module.exports = app => {
       eid: {
         type: STRING(255),
         allowNull: false
+      },
+      status: {
+        type: INTEGER,
+        defaultValue: STATUS.OPEN
       },
       targetType: {
         type: INTEGER,

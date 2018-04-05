@@ -52,10 +52,6 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 0
       },
-      contribute: {
-        type: INTEGER,
-        defaultValue: 0
-      },
       collection: {
         type: INTEGER,
         defaultValue: 0
