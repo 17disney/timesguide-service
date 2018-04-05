@@ -1,14 +1,36 @@
-const DEAL_TYPE = {
+const EXCHANGE_ACTION_TYPE = {
   GIVE: 1,
-  SYSTEM: 2,
-  FRIEND: 3
+  WITH_NPC: 2,
+  WITH_USER: 3,
+}
+
+const EXCHANGE_STATUS = {
+  DELETED: 0,
+  HAVE: 1,
+  SELL: 2
+}
+
+const TIMESGUIDE_CHILDREN_STATUS = {
+  DELETE: 0,
+  OPEN: 1,
+  STARTED: 2 //交换中
+  
+}
+
+const MESSAGE_TYPE = {
+  DEFAULT: 0,
+  REWARD: 1,
+  TIPS: 2
 }
 
 const MAX_GIVE = 10
 
 module.exports = {
-  DEAL_TYPE,
-  MAX_GIVE
+  EXCHANGE_ACTION_TYPE,
+  MAX_GIVE,
+  MESSAGE_TYPE,
+  EXCHANGE_STATUS,
+  TIMESGUIDE_CHILDREN_STATUS
 }
 
 /* ## 积分管理

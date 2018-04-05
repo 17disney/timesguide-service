@@ -1,5 +1,3 @@
-'use strict'
-
 module.exports = app => {
   const { STRING, DATE } = app.Sequelize
 

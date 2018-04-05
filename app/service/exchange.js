@@ -14,6 +14,20 @@ class ExchangeService extends Service {
     return data
 
   }
+
+  async checkGiveAvailable(tid, userid) {
+    const { ctx } = this
+    const exchangeCount = await ctx.model.Exchange.count({
+      where: {
+        userid,
+        tid,
+        targetTid: null
+      }
+    })
+    const available = MAX_GIVE - exchangeCount
+    return available
+  }
+
 }
 
 module.exports = ExchangeService

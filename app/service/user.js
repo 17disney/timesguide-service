@@ -1,11 +1,13 @@
 const Service = require('egg').Service
 const uuid = require('../utils/uuid')
+const { MAX_GIVE } = require('../utils/const')
 
 class UserService extends Service {
   constructor(ctx) {
     super(ctx)
     this.models = this.ctx.model
   }
+ 
 
   // 检查登录
   async checkWeappUser() {

@@ -1,5 +1,3 @@
-// 贡献时间表
-
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 

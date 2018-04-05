@@ -1,4 +1,5 @@
 const moment = require('moment')
+const { TIMESGUIDE_CHILDREN_STATUS } = require('../utils/const')
 
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
@@ -9,6 +10,11 @@ module.exports = app => {
       id: {
         type: STRING(255),
         primaryKey: true
+      },
+      status: {
+        type: INTEGER,
+        defaultValue: TIMESGUIDE_CHILDREN_STATUS.OPEN,
+        allowNull: false
       }
     },
     {

@@ -1,13 +1,8 @@
 const moment = require('moment')
+const { MESSAGE_TYPE } = require('../utils/const')
 
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN } = app.Sequelize
-
-  const TYPE = {
-    DEFAULT: 0,
-    REWARD: 1,
-    TIPS: 2
-  }
 
   const Message = app.model.define(
     'messages',
@@ -22,7 +17,7 @@ module.exports = app => {
       },
       type: {
         type: INTEGER,
-        defaultValue: TYPE.DEFAULT
+        defaultValue: MESSAGE_TYPE.DEFAULT
       },
       title: {
         type: STRING,

@@ -117,6 +117,38 @@ class userController extends Controller {
     ctx.body = list
   }
 
+  async exchanges() {
+    const { ctx } = this
+    const { userid } = ctx.params
+
+    const list = await ctx.model.Exchange.findAll({
+      where: {
+        userid
+      },
+
+      include: [
+        {
+          model: ctx.model.Timesguide,
+          as: 'tidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        },
+        {
+          model: ctx.model.Timesguide,
+          as: 'targetTidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        },
+        {
+          model: ctx.model.User,
+          as: 'targetUserInfo',
+          attributes: ['id', 'name', 'avatar']
+        }
+      ],
+
+      order: [['created_at', 'DESC']]
+    })
+    ctx.body = list
+  }
+
   async info() {
     const { ctx } = this
     const { userid } = ctx.params

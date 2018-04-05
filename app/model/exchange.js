@@ -1,48 +1,42 @@
+const { EXCHANGE_STATUS } = require('../utils/const')
+
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
-  const STATUS = {
-    DELETED: 0,
-    HAVE: 1,
-    SELL: 2
-  }
-
-  const Exchange = app.model.define(
-    'exchanges',
-    {
-      id: {
-        type: STRING(255),
-        primaryKey: true
-      },
-      eid: {
-        type: STRING(255),
-        allowNull: false
-      },
-      targetEid: {
-        type: STRING(255)
-      },
-      status: {
-        type: INTEGER,
-        default: STATUS.HAVE
-      }
+  const Exchange = app.model.define('exchanges', {
+    id: {
+      type: STRING(255),
+      primaryKey: true
+    },
+    eid: {
+      type: STRING(255),
+      allowNull: false
+    },
+    targetEid: {
+      type: STRING(255)
+    },
+    isOriginal: {
+      type: BOOLEAN,
+      defaultValue: false
     }
-  )
+  })
 
   Exchange.associate = function() {
     app.model.Exchange.belongsTo(app.model.Timesguide, {
       as: 'tidInfo',
       foreignKey: 'tid'
     }),
-    app.model.Exchange.belongsTo(app.model.Timesguide, {
-      as: 'targetTidInfo',
-      foreignKey: 'targetTid'
-    }),
-    app.model.Exchange.belongsTo(app.model.User, {
-      foreignKey: 'userid'
-    }),
-    app.model.Exchange.belongsTo(app.model.User, {
-      foreignKey: 'targetUserid'
-    })
+      app.model.Exchange.belongsTo(app.model.Timesguide, {
+        as: 'targetTidInfo',
+        foreignKey: 'targetTid'
+      }),
+      app.model.Exchange.belongsTo(app.model.User, {
+        foreignKey: 'userid'
+      }),
+      app.model.Exchange.belongsTo(app.model.User, {
+        as: 'targetUserInfo',
+        foreignKey: 'targetUserid'
+      })
   }
 
   return Exchange

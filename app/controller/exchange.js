@@ -1,5 +1,10 @@
 const Controller = require('egg').Controller
-const { DEAL_TYPE, MAX_GIVE } = require('../utils/const')
+const {
+  EXCHANGE_ACTION_TYPE,
+  MAX_GIVE,
+  TIMESGUIDE_CHILDREN_STATUS,
+  EXCHANGE_STATUS
+} = require('../utils/const')
 const uuid = require('../utils/uuid')
 
 class ExchangeController extends Controller {
@@ -10,114 +15,145 @@ class ExchangeController extends Controller {
     this.ctx.body = 'hi, egg'
   }
 
-  // 领取时间表
-  async deal() {
-    const { ctx } = this
-    const { tid } = ctx.params
-
-    const user = await ctx.service.user.checkWeappUser()
-    const userid = user.id
-
-    // 检查已领取的数量
-    const exchangeCount = await ctx.model.Exchange.count({
-      where: {
-        userid,
-        tid,
-        targetTid: null
-      }
-    })
-    const available = MAX_GIVE - exchangeCount
-
-    if (available === -1) {
-      ctx.body = { available }
-      return
-    }
-
-    // 生成卡片
-    const eid = uuid()
-    const children = {
-      id: eid,
-      userid,
-      tid
-    }
-    await ctx.model.TimesguideChildren.create(children)
-
-    // 获取赠与人信息
-    const targetInfo = await ctx.service.disney.getRandom()
-
-    // 创建交易
-    const create = {
-      id: uuid(),
-      eid,
-      userid,
-      tid,
-      targetUserid: targetInfo['id'],
-      status: 1
-    }
-    await ctx.model.Exchange.create(create)
-
-    create.targetInfo = targetInfo
-    create.available = available
-
-    ctx.body = create
-  }
-
-  // 创建交换
+  // 创建交换 / 创建与NPC交换 / 领取
   async create() {
     const { ctx } = this
+    const { action, tid } = ctx.request.body
 
-    const user = await ctx.service.user.checkWeappUser()
+    let { eid, targetTid, targetUserid } = ctx.request.body
+
+    let targetEid
+    const id = uuid()
+
+    const user = await ctx.service.User.checkWeappUser()
     const userid = user.id
 
-    const {
-      eid,
-      tid,
-      type,
-      targetUserid,
-      targetTid,
-      targetEid
-    } = ctx.request.body
+    if (action === EXCHANGE_ACTION_TYPE.GIVE) {
+      // 检查已领取的数量
+      const available = await ctx.service.Exchange.checkGiveAvailable(
+        tid,
+        userid
+      )
+      if (available === -1) {
+        ctx.body = { available }
+        return
+      }
 
-    // 更新持有人
-    await ctx.model.TimesguideChildren.update(
-      {
-        userid: targetUserid
-      },
-      {
-        where: {
-          id: eid
+      // 创建新的时间表入自己
+      const timesguideChildren = await ctx.service.Timesguide.createChildren(
+        tid,
+        userid
+      )
+      // 随机获取赠与人
+      const targetInfo = await ctx.service.disney.getRandom()
+
+      // 创建交易记录
+      const create = {
+        id,
+        eid: timesguideChildren.id,
+        tid,
+        userid,
+        targetUserid: targetInfo.id,
+        isOriginal: true
+      }
+      await ctx.model.Exchange.create(create)
+
+      create.targetInfo = targetInfo
+      create.available = available
+
+      ctx.body = create
+    } else if (action === EXCHANGE_ACTION_TYPE.WITH_NPC) {
+      // 创建新的时间表入自己
+      const timesguideChildren = await ctx.service.Timesguide.createChildren(
+        tid,
+        userid
+      )
+      // 将时间表移主
+      await ctx.service.TimesguideChildren.update(
+        { userid: targetUserid },
+        {
+          where: { eid }
         }
+      )
+
+      // 创建交易记录
+      const create = {
+        id,
+        eid: timesguideChildren.id,
+        tid,
+        userid,
+        targetUserid,
+        isOriginal: true
+      }
+      await ctx.model.Exchange.create(create)
+      ctx.body = create
+    } else if (action === EXCHANGE_ACTION_TYPE.WITH_USER) {
+      // 将时间表锁定
+      await ctx.service.TimesguideChildren.update(
+        { status: STARTED },
+        {
+          where: { eid }
+        }
+      )
+
+      // 创建交易记录
+      const create = {
+        id,
+        eid,
+        tid,
+        userid,
+        isOriginal: false
+      }
+      await ctx.model.Exchange.create(create)
+      ctx.body = create
+    }
+  }
+
+  // 加入交换
+  async join() {
+    const { ctx } = this
+    const { id, eid, targetEid } = ctx.request.body
+
+    const user = await ctx.service.User.checkWeappUser()
+    const userid = user.id
+
+    // 查询交易
+    const exchange = await ctx.model.Exchange.findOne({
+      where: { id }
+    })
+
+    // 查询我的时间表
+    const timesguide = await ctx.model.TimesguideChildren.findOne({
+      where: { eid }
+    })
+
+    // 对方时间表移主
+    await ctx.service.TimesguideChildren.update(
+      { userid },
+      {
+        where: { id: targetEid }
       }
     )
 
-
-    if (type === 2) {
-      // NPC 生成卡片
-      const targetEid = uuid()
-      const children = {
-        id: targetEid,
-        userid: targetUserid,
-        tid: targetTid
+    // 我方时间表移主
+    await ctx.service.TimesguideChildren.update(
+      { userid: exchange.userid },
+      {
+        where: { id: eid }
       }
-      await ctx.model.TimesguideChildren.create(children)
+    )
+
+    // 更新交易记录
+    const update = {
+      targetEid: eid,
+      targetTid: timesguide.tid,
+      targetUserid: userid
     }
+    await ctx.model.Exchange.update(update, {
+      where: { id }
+    })
 
-
-
-    // 创建交易
-    const exchange = {
-      id: uuid(),
-      userid,
-      eid: targetEid,
-      tid: targetTid,
-      targetUserid: userid,
-      targetTid: tid,
-      targetEid: eid
-    }
-
-    await ctx.model.Exchange.create(exchange)
-
-    ctx.body = exchange
+    ctx.body = update
   }
 }
 
