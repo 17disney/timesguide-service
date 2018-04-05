@@ -67,9 +67,6 @@ module.exports = app => {
     app.model.Timesguide.hasMany(app.model.Contribute, {
       foreignKey: 'tid'
     })
-    app.model.Timesguide.hasMany(app.model.Started, {
-      foreignKey: 'tid'
-    })
     app.model.Timesguide.belongsTo(app.model.User, {
       foreignKey: 'userid'
     })
