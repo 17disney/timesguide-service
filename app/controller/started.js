@@ -5,11 +5,12 @@ const uuid = require('../utils/uuid')
 class startedController extends Controller {
   async create() {
     const { ctx } = this
-    const { targetType, tid, targetLocal, targetTid } = ctx.request.body
+    const { eid, targetType, tid, targetLocal, targetTid } = ctx.request.body
 
     const user = await ctx.service.user.checkWeappUser()
     const create = {
       id: uuid(),
+      eid,
       tid,
       userid: user.id,
       targetType,

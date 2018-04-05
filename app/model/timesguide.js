@@ -51,6 +51,10 @@ module.exports = app => {
           const startDate = moment(this.startDate).format('YYYY.MM.DD')
           const endDate = moment(this.endDate).format('MM.DD')
           return startDate + '-' + endDate
+        },
+        price() {
+          const days = moment().diff(moment(this.startDate), 'days')
+          return 20 + Math.floor(days / 90) * 10
         }
       }
     }

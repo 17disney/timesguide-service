@@ -15,6 +15,10 @@ module.exports = app => {
         type: STRING(255),
         primaryKey: true
       },
+      eid: {
+        type: STRING(255),
+        allowNull: false
+      },
       targetType: {
         type: INTEGER,
         defaultValue: TARGET_TYPE.ALL

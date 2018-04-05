@@ -71,11 +71,15 @@ class UserService extends Service {
     })
 
     let { sex, city, province, country, aboutMe, birthday } = userprofile
-    let { id, name, avatar } = user
+    let { id, name, avatar, mark, exchange, contribute, collection } = user
 
     const User = {
       id,
       name,
+      mark,
+      exchange,
+      contribute,
+      collection,
       avatar,
       sex,
       city,

@@ -16,7 +16,7 @@ class TimesguideController extends Controller {
   async id() {
     const { ctx } = this
     const { id } = ctx.params
-    const data = await ctx.model.Timesguide.findOne({
+    let data = await ctx.model.Timesguide.findOne({
       where: {
         id
       },
@@ -27,6 +27,23 @@ class TimesguideController extends Controller {
         }
       ]
     })
+
+    const have = await ctx.model.Exchange.count({
+      where: {
+        tid: id,
+        targetTid: null
+      }
+    })
+
+    const exchange = await ctx.model.Exchange.count({
+      where: {
+        tid: id
+      }
+    })
+
+    data.have = have
+    data.exchange = exchange
+
     this.ctx.body = data
   }
 

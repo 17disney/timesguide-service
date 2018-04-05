@@ -41,11 +41,18 @@ class userController extends Controller {
       where: {
         userid
       },
-      include: {
-        model: ctx.model.Timesguide,
-        // attributes: ['picUrl', 'startDate', 'endDate'],
-        as: 'timesguides'
-      },
+      include: [
+        {
+          model: ctx.model.Timesguide,
+          as: 'tidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        },
+        {
+          model: ctx.model.Timesguide,
+          as: 'targetTidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        }
+      ],
 
       order: [['created_at', 'DESC']]
     })
@@ -91,16 +98,15 @@ class userController extends Controller {
     ctx.body = list
   }
 
-
   async info() {
     const { ctx } = this
-    const {userid} = ctx.params
+    const { userid } = ctx.params
     ctx.body = await ctx.service.user.getUserinfo(userid)
   }
 
   async user() {
     const { ctx } = this
-    const {userid} = ctx.params
+    const { userid } = ctx.params
 
     const user = await ctx.service.user.checkWeappUser()
     ctx.body = await ctx.service.user.getUserinfo(user.id)

@@ -50,6 +50,7 @@ class ExchangeController extends Controller {
     }
     await ctx.model.Exchange.create(create)
 
+    create.targetInfo = targetInfo
     create.available = available
     ctx.body = create
   }

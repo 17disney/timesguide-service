@@ -14,6 +14,9 @@ module.exports = app => {
         type: STRING(255),
         primaryKey: true
       },
+      targetId: {
+        type: STRING(255)
+      },
       status: {
         type: INTEGER,
         default: STATUS.HAVE
@@ -23,9 +26,11 @@ module.exports = app => {
 
   Exchange.associate = function() {
     app.model.Exchange.belongsTo(app.model.Timesguide, {
+      as: 'tidInfo',
       foreignKey: 'tid'
     }),
     app.model.Exchange.belongsTo(app.model.Timesguide, {
+      as: 'targetTidInfo',
       foreignKey: 'targetTid'
     }),
     app.model.Exchange.belongsTo(app.model.User, {
