@@ -32,7 +32,7 @@ class ExchangeController extends Controller {
       ctx.body = { available }
       return
     }
-    
+
     // 生成卡片
     const eid = uuid()
     const children = {
@@ -40,19 +40,17 @@ class ExchangeController extends Controller {
       userid,
       tid
     }
-    console.log(children)
     await ctx.model.TimesguideChildren.create(children)
 
     // 获取赠与人信息
     const targetInfo = await ctx.service.disney.getRandom()
-    
+
     // 创建交易
     const create = {
       id: uuid(),
       eid,
       userid,
       tid,
-      type: 1,
       targetUserid: targetInfo['id'],
       status: 1
     }
@@ -64,29 +62,62 @@ class ExchangeController extends Controller {
     ctx.body = create
   }
 
+  // 创建交换
   async create() {
     const { ctx } = this
+
+    const user = await ctx.service.user.checkWeappUser()
+    const userid = user.id
+
     const {
-      id,
+      eid,
       tid,
       type,
       targetUserid,
       targetTid,
-      targetId
+      targetEid
     } = ctx.request.body
 
-    const arg = {
-      id,
-      tid,
-      type,
-      targetUserid,
-      targetTid,
-      targetId
+    // 更新持有人
+    await ctx.model.TimesguideChildren.update(
+      {
+        userid: targetUserid
+      },
+      {
+        where: {
+          id: eid
+        }
+      }
+    )
+
+
+    if (type === 2) {
+      // NPC 生成卡片
+      const targetEid = uuid()
+      const children = {
+        id: targetEid,
+        userid: targetUserid,
+        tid: targetTid
+      }
+      await ctx.model.TimesguideChildren.create(children)
     }
 
-    const data = await ctx.model.Exchange.create(arg)
 
-    ctx.body = data
+
+    // 创建交易
+    const exchange = {
+      id: uuid(),
+      userid,
+      eid: targetEid,
+      tid: targetTid,
+      targetUserid: userid,
+      targetTid: tid,
+      targetEid: eid
+    }
+
+    await ctx.model.Exchange.create(exchange)
+
+    ctx.body = exchange
   }
 }
 

@@ -13,20 +13,12 @@ class userController extends Controller {
     const userInfo = data.userInfo
     const user = await ctx.service.user.getOauthUser(userInfo, 'WEAPP')
 
-    // const managers = await ctx.model.models.school_managers.findAll({
-    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
-    //   where: {
-    //     userId: user.id
-    //   }
-    // })
     data.userInfo = Object.assign(
       {
-        // id: user.id,
+        id: user.id,
         name: user.name,
         avatar: user.avatar,
-        level: user.level,
-        userid: user.userid
-        // inChargeOf: managers.map(item => item.schoolId)
+        level: user.level
       },
       data.userInfo
     )
