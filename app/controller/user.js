@@ -33,6 +33,33 @@ class userController extends Controller {
     ctx.body = data
   }
 
+  async update() {
+    const { ctx } = this
+    const { name, sex, birthday } = ctx.request.body
+
+    const user = await ctx.service.user.checkWeappUser()
+    const userid = user.id
+
+    const userprofile = {
+      sex,
+      birthday
+    }
+
+    const userinfo = {
+      name
+    }
+
+    await ctx.model.User.update(userinfo, {
+      where: { id: userid }
+    })
+
+    await ctx.model.Userprofile.update(userprofile, {
+      where: { userid }
+    })
+
+    ctx.body = Object({}, userinfo, userprofile)
+  }
+
   async timesguides() {
     const { ctx } = this
     const { userid } = ctx.params

@@ -10,12 +10,7 @@ class ExchangeController extends Controller {
     this.ctx.body = 'hi, egg'
   }
 
-  async friends() {
-    const { ctx } = this
-    ctx.body = await ctx.service.disney.getAll()
-  }
-
-  // 交易
+  // 领取时间表
   async deal() {
     const { ctx } = this
     const { tid } = ctx.params
@@ -31,17 +26,30 @@ class ExchangeController extends Controller {
         targetTid: null
       }
     })
-
-    const targetInfo = await ctx.service.disney.getRandom()
     const available = MAX_GIVE - exchangeCount
 
     if (available === -1) {
       ctx.body = { available }
       return
     }
+    
+    // 生成卡片
+    const eid = uuid()
+    const children = {
+      id: eid,
+      userid,
+      tid
+    }
+    console.log(children)
+    await ctx.model.TimesguideChildren.create(children)
 
+    // 获取赠与人信息
+    const targetInfo = await ctx.service.disney.getRandom()
+    
+    // 创建交易
     const create = {
       id: uuid(),
+      eid,
       userid,
       tid,
       type: 1,
@@ -52,6 +60,7 @@ class ExchangeController extends Controller {
 
     create.targetInfo = targetInfo
     create.available = available
+
     ctx.body = create
   }
 
@@ -78,9 +87,6 @@ class ExchangeController extends Controller {
     const data = await ctx.model.Exchange.create(arg)
 
     ctx.body = data
-  }
-  async users() {
-    this.ctx.body = 'hi, egg'
   }
 }
 

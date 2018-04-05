@@ -5,12 +5,13 @@ module.exports = app => {
   const { router, controller } = app
   router.get('/', controller.home.index)
 
-  router.get('/disney/friends', controller.exchange.friends);
+  router.get('/disney/friends', controller.disney.friends);
 
   router.get('/login', controller.user.login);
   router.get('/cos_auth', controller.user.cos_auth);
   
   router.get('/user', controller.user.user);
+  router.put('/user', controller.user.update);
   router.get('/user/:userid', controller.user.info)
   router.get('/user/:userid/timesguides', controller.user.timesguides)
   router.get('/user/:userid/starteds', controller.user.starteds)

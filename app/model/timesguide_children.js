@@ -3,8 +3,8 @@ const moment = require('moment')
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
-  const TimesguideChild = app.model.define(
-    'timesguides_child',
+  const TimesguideChildren = app.model.define(
+    'timesguides_children',
     {
       id: {
         type: STRING(255),
@@ -20,14 +20,14 @@ module.exports = app => {
     }
   )
 
-  TimesguideChild.associate = function() {
-    app.model.TimesguideChild.belongsTo(app.model.TimesguideChild, {
+  TimesguideChildren.associate = function() {
+    app.model.TimesguideChildren.belongsTo(app.model.Timesguide, {
       foreignKey: 'tid'
     })
-    app.model.TimesguideChild.belongsTo(app.model.User, {
+    app.model.TimesguideChildren.belongsTo(app.model.User, {
       foreignKey: 'userid'
     })
   }
 
-  return TimesguideChild
+  return TimesguideChildren
 }
