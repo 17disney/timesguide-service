@@ -12,7 +12,7 @@ class TimesguideController extends Controller {
       include: [
         {
           model: ctx.model.TimesguideChildren,
-          attributes: ['id', 'status'],
+          attributes: ['id', 'status']
           // where: {
           //   status: TIMESGUIDE_CHILDREN_STATUS.STARTED
           // }
@@ -93,12 +93,40 @@ class TimesguideController extends Controller {
       },
       include: [
         {
+          as: 'userInfo',
           model: ctx.model.User,
           attributes: ['id', 'avatar', 'name']
         }
       ]
     })
-    ctx.body = data
+
+
+    let list = []
+    let check = new Set()
+    data.forEach(item => {
+      const { id, eid, userInfo } = item
+      const userid = userInfo.id
+
+      if (!check.has(userid)) {
+        list.push({
+          id: userid,
+          exid: id,
+          eid,
+          avatar: userInfo.avatar,
+          name: userInfo.name
+        })
+        check.add(userid)
+      }
+    })
+
+    if (list.length < 5) {
+      for (let i = 0; i <= 5; i++) {
+        const disneyFriend = await ctx.service.disney.getRandom()
+        list.push(disneyFriend)
+      }
+    }
+
+    ctx.body = list
   }
 
   async userList() {

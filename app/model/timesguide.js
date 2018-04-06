@@ -45,7 +45,7 @@ module.exports = app => {
       ],
       getterMethods: {
         picUrl() {
-          return 'http://17disney.com/images/timesguide/' + this.picName
+          return 'http://cdn.17disney.com/' + this.picName
         },
         dateRang() {
           const startDate = moment(this.startDate).format('YYYY.MM.DD')

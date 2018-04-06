@@ -33,6 +33,7 @@ module.exports = app => {
   router.get('/v1/upload/token', controller.upload.token)
 
   router.get('/v1/timesguides-children/:id', controller.timesguideChildren.id)
+  router.get('/v1/timesguides-children', controller.timesguideChildren.list)
 
   router.get('/v1/timesguides', controller.timesguide.list)
   router.post('/v1/timesguides', controller.timesguide.create)

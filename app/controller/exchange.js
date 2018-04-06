@@ -25,6 +25,7 @@ class ExchangeController extends Controller {
     targetUserid：(我需要的交换对象，只用于和NPC交换)
     */
     let { tid, eid, targetUserid } = ctx.request.body
+    tid = parseInt(tid)
 
     let targetEid
     const id = uuid()
@@ -62,47 +63,71 @@ class ExchangeController extends Controller {
       }
       await ctx.model.Exchange.create(create)
 
-      create.targetInfo = targetInfo
-      create.available = available
-
-      ctx.body = create
+      ctx.body = { id, available, targetInfo }
     } else if (action === EXCHANGE_ACTION_TYPE.WITH_NPC) {
       // 创建新的时间表入自己
       const timesguideChildren = await ctx.service.timesguide.createChildren(
         tid,
         userid
       )
-      // 将时间表移主
+
+      // 查询我的时间表
+      const timesguide = await ctx.model.TimesguideChildren.findOne({
+        where: { id: eid, userid }
+      })
+
+      if (!timesguide) {
+        ctx.body = { message: '没有找到你的时间表，可能已经交换' }
+        return
+      }
+
+      if (tid === timesguide.tid) {
+        ctx.body = { message: '不能交换相同的时间表' }
+        return
+      }
+
+      // 将我的时间表给对方
       await ctx.model.TimesguideChildren.update(
         { userid: targetUserid },
         {
-          where: { id:eid }
+          where: { id: eid }
         }
       )
 
       // 创建交易记录
+      // const create = {
+      //   id,
+      //   eid: timesguideChildren.id,
+      //   tid,
+      //   userid,
+      //   targetTid: timesguide.tid,
+      //   targetUserid,
+      //   isComplate: true
+      // }
       const create = {
         id,
-        eid: timesguideChildren.id,
-        tid,
+        eid: timesguide.id,
+        tid: timesguide.tid,
         userid,
+        targetTid: tid,
+        targetEid: timesguideChildren.id,
         targetUserid,
         isComplate: true
       }
       await ctx.model.Exchange.create(create)
-      ctx.body = create
+      ctx.body = { id }
     } else if (action === EXCHANGE_ACTION_TYPE.CREATE_WITH_USER) {
       const timesguide = await ctx.model.TimesguideChildren.findOne({
         where: { id: eid }
       })
 
       if (!timesguide) {
-        ctx.body = { massage: '没有这个时间表' }
+        ctx.body = { message: '没有这个时间表' }
         return
       }
 
       if (timesguide.status === TIMESGUIDE_CHILDREN_STATUS.STARTED) {
-        ctx.body = { massage: '这张时间表正在交换中' }
+        ctx.body = { message: '这张时间表正在交换中' }
         return
       }
 
@@ -123,7 +148,7 @@ class ExchangeController extends Controller {
         isComplate: false
       }
       await ctx.model.Exchange.create(create)
-      ctx.body = create
+      ctx.body = { id }
     }
   }
 
@@ -141,37 +166,55 @@ class ExchangeController extends Controller {
     const user = await ctx.service.user.checkWeappUser()
     const userid = user.id
 
+    console.log(id)
+
     // 查询对方创建的交易
     const exchange = await ctx.model.Exchange.findOne({
       where: { id }
     })
 
-    if (!timesguide) {
-      ctx.body = { massage: '没有这个交易' }
+    if (!exchange) {
+      ctx.body = { message: '没有这个交换，可能对方已交换' }
       return
     }
 
     // 查询我的时间表
     const timesguide = await ctx.model.TimesguideChildren.findOne({
-      where: { eid }
+      where: { id: eid, userid }
     })
 
     if (!timesguide) {
-      ctx.body = { massage: '我的时间表有误' }
+      ctx.body = { message: '没有找到你的时间表，可能你已经交换' }
+      return
+    }
+
+    if (exchange.tid === timesguide.tid) {
+      ctx.body = { message: '不能交换相同的时间表' }
+      return
+    }
+
+    if (exchange.userid === userid) {
+      ctx.body = { message: '不能和自己交换' }
       return
     }
 
     // 将我的时间表给对方
-    await ctx.service.timesguideChildren.update(
-      { userid: exchange.userid },
+    await ctx.model.TimesguideChildren.update(
+      {
+        userid: exchange.userid,
+        status: TIMESGUIDE_CHILDREN_STATUS.OPEN
+      },
       {
         where: { id: eid }
       }
     )
 
     // 将对方时间表给我
-    await ctx.service.timesguideChildren.update(
-      { userid },
+    await ctx.model.TimesguideChildren.update(
+      {
+        userid,
+        status: TIMESGUIDE_CHILDREN_STATUS.OPEN
+      },
       {
         where: { id: exchange.eid }
       }
@@ -181,13 +224,14 @@ class ExchangeController extends Controller {
     const update = {
       targetEid: eid,
       targetTid: timesguide.tid,
-      targetUserid: userid
+      targetUserid: userid,
+      isComplate: true
     }
     await ctx.model.Exchange.update(update, {
       where: { id }
     })
 
-    ctx.body = update
+    ctx.body = { id }
   }
 }
 

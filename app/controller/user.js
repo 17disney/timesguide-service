@@ -120,7 +120,7 @@ class userController extends Controller {
 
     const list = await ctx.model.Exchange.findAll({
       where: {
-        userid
+        $or: [{ userid }, { targetUserid: userid }]
       },
 
       include: [
@@ -138,10 +138,15 @@ class userController extends Controller {
           model: ctx.model.User,
           as: 'targetUserInfo',
           attributes: ['id', 'name', 'avatar']
+        },
+        {
+          model: ctx.model.User,
+          as: 'userInfo',
+          attributes: ['id', 'name', 'avatar']
         }
       ],
 
-      order: [['created_at', 'DESC']]
+      order: [['updated_at', 'DESC']]
     })
     ctx.body = list
   }

@@ -1,3 +1,7 @@
+const TIMESGUIDE_CDN_STYLES = {
+  SMALL_CUT: 'imageMogr2/auto-orient/thumbnail/180x2000/gravity/North/crop/x350/format/webp/blur/1x0/quality/75|imageslim'
+}
+
 const EXCHANGE_ACTION_TYPE = {
   GIVE: 1,
   WITH_NPC: 2,
@@ -27,6 +31,7 @@ const MESSAGE_TYPE = {
 const MAX_GIVE = 10
 
 module.exports = {
+  TIMESGUIDE_CDN_STYLES,
   EXCHANGE_ACTION_TYPE,
   MAX_GIVE,
   MESSAGE_TYPE,

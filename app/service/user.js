@@ -7,7 +7,6 @@ class UserService extends Service {
     super(ctx)
     this.models = this.ctx.model
   }
- 
 
   // 检查登录
   async checkWeappUser() {
@@ -75,6 +74,24 @@ class UserService extends Service {
     let { sex, city, province, country, aboutMe, birthday } = userprofile
     let { id, name, avatar, mark, exchange, contribute, collection } = user
 
+    const exchanges = await this.models.Exchange.count({
+      where: {
+        $or: [{ userid }, { targetUserid: userid }]
+      }
+    })
+
+    const contributes = await this.models.Contribute.count({
+      where: {
+        userid
+      }
+    })
+
+    const collections = await this.models.TimesguideChildren.count({
+      where: {
+        userid
+      }
+    })
+
     const User = {
       id,
       name,
@@ -88,7 +105,10 @@ class UserService extends Service {
       province,
       country,
       aboutMe,
-      birthday
+      birthday,
+      exchanges,
+      contributes,
+      collections
     }
 
     return User

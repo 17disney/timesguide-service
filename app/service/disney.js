@@ -1,19 +1,27 @@
 const firendList = require('../vendor/disney/disney-firend')
 const Service = require('egg').Service
+const { getRandomList } = require('../utils')
 
 class DisneyFriendService extends Service {
   // 获得随机朋友
-  async getRandom() {
-    const vid = Math.round(Math.random() * 55)
-    const data = firendList[vid]
-    const { id, name, media } = data
+  async getRandom(num = 1) {
+    let randomList = getRandomList(num, 55)
+    let users = []
 
-    const nData = {
-      id,
-      name,
-      avatarUrl: media.avatarMobileSquare['url']
+    randomList.forEach(key => {
+      const { id, name, media } = firendList[key]
+      users.push({
+        id,
+        name,
+        avatar: media.avatarMobileSquare['url']
+      })
+    })
+
+    if (num > 1) {
+      return users
+    } else {
+      return users[0]
     }
-    return nData
   }
 
   async getAll() {
