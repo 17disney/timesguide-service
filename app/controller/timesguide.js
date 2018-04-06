@@ -1,4 +1,5 @@
 const Controller = require('egg').Controller
+const { TIMESGUIDE_CHILDREN_STATUS } = require('../utils/const')
 
 class TimesguideController extends Controller {
   async list() {
@@ -8,6 +9,15 @@ class TimesguideController extends Controller {
       where: {
         local
       },
+      include: [
+        {
+          model: ctx.model.TimesguideChildren,
+          attributes: ['id', 'status'],
+          // where: {
+          //   status: TIMESGUIDE_CHILDREN_STATUS.STARTED
+          // }
+        }
+      ],
       order: [['startDate', 'ASC']]
     })
     ctx.body = list
@@ -16,6 +26,7 @@ class TimesguideController extends Controller {
   async id() {
     const { ctx } = this
     const { id } = ctx.params
+    // const {rate} = ctx.query
     let data = await ctx.model.Timesguide.findOne({
       where: {
         id
@@ -24,6 +35,10 @@ class TimesguideController extends Controller {
         {
           model: ctx.model.User,
           attributes: ['id', 'avatar', 'name']
+        },
+        {
+          model: ctx.model.TimesguideChildren,
+          attributes: ['id', 'status']
         }
       ]
     })
@@ -71,15 +86,17 @@ class TimesguideController extends Controller {
     const { ctx } = this
     const { id } = ctx.params
     const { status = 1 } = ctx.query
-    const data = await ctx.model.Started.findAll({
+    const data = await ctx.model.Exchange.findAll({
       where: {
-        status,
-        tid: id
+        tid: id,
+        isComplate: false
       },
-      include: [{
-        model: ctx.model.User,
-        attributes: ['id', 'avatar', 'name']
-      }]
+      include: [
+        {
+          model: ctx.model.User,
+          attributes: ['id', 'avatar', 'name']
+        }
+      ]
     })
     ctx.body = data
   }

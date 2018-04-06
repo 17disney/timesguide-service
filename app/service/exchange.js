@@ -1,8 +1,8 @@
 const Service = require('egg').Service
+const { MAX_GIVE } = require('../utils/const')
 
 class ExchangeService extends Service {
   async create() {
-
     // const data = await this.models.Exchange.create({
     //   site,
     //   site_uid: userInfo.openId,
@@ -12,7 +12,6 @@ class ExchangeService extends Service {
     // })
 
     return data
-
   }
 
   async checkGiveAvailable(tid, userid) {
@@ -27,7 +26,6 @@ class ExchangeService extends Service {
     const available = MAX_GIVE - exchangeCount
     return available
   }
-
 }
 
 module.exports = ExchangeService

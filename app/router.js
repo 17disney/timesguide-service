@@ -23,7 +23,6 @@ module.exports = app => {
   router.post('/v1/exchanges', controller.exchange.create)
 
   router.get('/v1/exchanges/:id', controller.exchange.id)
-
   router.put('/v1/exchanges/:id', controller.exchange.join)
 
   // router.post('/v1/exchanges/:tid', controller.exchange.join)

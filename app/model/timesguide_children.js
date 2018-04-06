@@ -28,7 +28,8 @@ module.exports = app => {
 
   TimesguideChildren.associate = function() {
     app.model.TimesguideChildren.belongsTo(app.model.Timesguide, {
-      foreignKey: 'tid'
+      as: 'tidInfo',
+      foreignKey: 'tid',
     })
     app.model.TimesguideChildren.belongsTo(app.model.User, {
       foreignKey: 'userid'

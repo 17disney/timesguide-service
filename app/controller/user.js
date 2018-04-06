@@ -1,5 +1,6 @@
 const Controller = require('egg').Controller
 const crypto = require('crypto')
+const {TIMESGUIDE_CHILDREN_STATUS} = require('../utils/const')
 
 class userController extends Controller {
   async login() {
@@ -56,19 +57,15 @@ class userController extends Controller {
     const { ctx } = this
     const { userid } = ctx.params
 
-    const list = await ctx.model.Exchange.findAll({
+    const list = await ctx.model.TimesguideChildren.findAll({
       where: {
+        status: TIMESGUIDE_CHILDREN_STATUS.OPEN,
         userid
       },
       include: [
         {
           model: ctx.model.Timesguide,
           as: 'tidInfo'
-          // attributes: ['picUrl', 'startDate', 'endDate']
-        },
-        {
-          model: ctx.model.Timesguide,
-          as: 'targetTidInfo'
           // attributes: ['picUrl', 'startDate', 'endDate']
         }
       ],

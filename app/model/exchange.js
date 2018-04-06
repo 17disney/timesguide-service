@@ -15,7 +15,7 @@ module.exports = app => {
     targetEid: {
       type: STRING(255)
     },
-    isOriginal: {
+    isComplate: {
       type: BOOLEAN,
       defaultValue: false
     }
