@@ -1,6 +1,7 @@
 const { EXCHANGE_STATUS } = require('../utils/const')
 const moment = require('moment')
 
+
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 

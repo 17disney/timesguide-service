@@ -9,6 +9,17 @@ class contributeController extends Controller {
 
     const userInfo = await ctx.service.user.checkWeappUser()
 
+    const contribute = await ctx.model.Contribute.findOne({
+      where: {
+        picUrl
+      }
+    })
+
+    if (contribute) {
+      ctx.body = { message: '你已经提交过该图片，请勿重复提交' }
+      return
+    }
+
     const create = {
       id: uuid(),
       tid,

@@ -31,7 +31,7 @@ module.exports = app => {
     {
       getterMethods: {
         createAt() {
-          return moment(this.create_at).format('YYYY年MM月DD日 HH:mm:ss')
+          return moment(this.created_at).format('M月D日 H:mm:ss')
         }
       }
     }

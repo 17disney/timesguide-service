@@ -1,5 +1,6 @@
 const Controller = require('egg').Controller
 const {
+  MARK_RULE,
   EXCHANGE_ACTION_TYPE,
   TIMESGUIDE_CHILDREN_STATUS,
   EXCHANGE_STATUS
@@ -65,6 +66,13 @@ class ExchangeController extends Controller {
 
       ctx.body = { id, available, targetInfo }
     } else if (action === EXCHANGE_ACTION_TYPE.WITH_NPC) {
+      // 检查我的积分
+      const userMark = await ctx.service.user.getMark(userid)
+      if (userMark < Math.abs(MARK_RULE.EXCHANGE_WITH_NPC)) {
+        ctx.body = { message: `你的积分不足，无法兑换，剩余积分${userMark}` }
+        return
+      }
+
       // 创建新的时间表入自己
       const timesguideChildren = await ctx.service.timesguide.createChildren(
         tid,
@@ -94,16 +102,6 @@ class ExchangeController extends Controller {
         }
       )
 
-      // 创建交易记录
-      // const create = {
-      //   id,
-      //   eid: timesguideChildren.id,
-      //   tid,
-      //   userid,
-      //   targetTid: timesguide.tid,
-      //   targetUserid,
-      //   isComplate: true
-      // }
       const create = {
         id,
         eid: timesguide.id,
@@ -115,6 +113,9 @@ class ExchangeController extends Controller {
         isComplate: true
       }
       await ctx.model.Exchange.create(create)
+
+      await ctx.service.user.updateMark(userid, MARK_RULE.EXCHANGE_WITH_NPC)
+
       ctx.body = { id }
     } else if (action === EXCHANGE_ACTION_TYPE.CREATE_WITH_USER) {
       const timesguide = await ctx.model.TimesguideChildren.findOne({
@@ -165,8 +166,6 @@ class ExchangeController extends Controller {
 
     const user = await ctx.service.user.checkWeappUser()
     const userid = user.id
-
-    console.log(id)
 
     // 查询对方创建的交易
     const exchange = await ctx.model.Exchange.findOne({
@@ -230,6 +229,16 @@ class ExchangeController extends Controller {
     await ctx.model.Exchange.update(update, {
       where: { id }
     })
+
+    // 双方添加积分
+    await ctx.service.user.updateMark(
+      exchange.userid,
+      MARK_RULE.EXCHANGE_WITH_USER
+    )
+    await ctx.service.user.updateMark(userid, MARK_RULE.EXCHANGE_WITH_USER)
+
+    const content = `恭喜！会员 ${user.name} 与你交换了时间表！`
+    await ctx.service.message.newMessage(content, exchange.userid)
 
     ctx.body = { id }
   }

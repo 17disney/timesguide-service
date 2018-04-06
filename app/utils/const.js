@@ -1,5 +1,11 @@
 const TIMESGUIDE_CDN_STYLES = {
-  SMALL_CUT: 'imageMogr2/auto-orient/thumbnail/180x2000/gravity/North/crop/x350/format/webp/blur/1x0/quality/75|imageslim'
+  SMALL_CUT:
+    'imageMogr2/auto-orient/thumbnail/180x2000/gravity/North/crop/x350/format/webp/blur/1x0/quality/75|imageslim'
+}
+
+const MARK_RULE = {
+  EXCHANGE_WITH_USER: 10,
+  EXCHANGE_WITH_NPC: -10
 }
 
 const EXCHANGE_ACTION_TYPE = {
@@ -19,7 +25,6 @@ const TIMESGUIDE_CHILDREN_STATUS = {
   DELETE: 0,
   OPEN: 1,
   STARTED: 2 //交换中
-  
 }
 
 const MESSAGE_TYPE = {
@@ -31,6 +36,7 @@ const MESSAGE_TYPE = {
 const MAX_GIVE = 10
 
 module.exports = {
+  MARK_RULE,
   TIMESGUIDE_CDN_STYLES,
   EXCHANGE_ACTION_TYPE,
   MAX_GIVE,

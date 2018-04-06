@@ -1,6 +1,6 @@
 const Service = require('egg').Service
 const uuid = require('../utils/uuid')
-const { MAX_GIVE } = require('../utils/const')
+const { MAX_GIVE, MARK_RULE } = require('../utils/const')
 
 class UserService extends Service {
   constructor(ctx) {
@@ -58,6 +58,32 @@ class UserService extends Service {
     return user
   }
 
+  async getMark(userid) {
+    const user = await this.models.User.findOne({
+      where: {
+        id: userid
+      }
+    })
+    return user.mark
+  }
+
+  async updateMark(userid, add) {
+    const user = await this.models.User.findOne({
+      where: {
+        id: userid
+      }
+    })
+
+    await this.models.User.update(
+      {
+        mark: user.mark + add
+      },
+      {
+        where: { id: userid }
+      }
+    )
+  }
+
   async getUserinfo(userid) {
     const user = await this.models.User.findOne({
       where: {
@@ -92,6 +118,13 @@ class UserService extends Service {
       }
     })
 
+    const messages = await this.models.Message.count({
+      where: {
+        userid,
+        isRead: false
+      }
+    })
+
     const User = {
       id,
       name,
@@ -108,7 +141,8 @@ class UserService extends Service {
       birthday,
       exchanges,
       contributes,
-      collections
+      collections,
+      messages
     }
 
     return User

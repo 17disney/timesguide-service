@@ -1,5 +1,6 @@
 const Service = require('egg').Service
 const { MAX_GIVE } = require('../utils/const')
+const uuid = require('../utils/uuid')
 
 // const MESSAGE_TYPE = {
 
@@ -16,6 +17,7 @@ class MessageService extends Service {
   newMessage(content, userid) {
     const {ctx} = this
     const create = {
+      id: uuid(),
       title: '提示',
       content,
       userid

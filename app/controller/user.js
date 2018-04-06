@@ -1,6 +1,6 @@
 const Controller = require('egg').Controller
 const crypto = require('crypto')
-const {TIMESGUIDE_CHILDREN_STATUS} = require('../utils/const')
+const { TIMESGUIDE_CHILDREN_STATUS } = require('../utils/const')
 
 class userController extends Controller {
   async login() {
@@ -111,6 +111,19 @@ class userController extends Controller {
       },
       order: [['created_at', 'DESC']]
     })
+
+    await ctx.model.Message.update(
+      {
+        isRead: true
+      },
+      {
+        where: {
+          isRead: false,
+          userid
+        }
+      }
+    )
+
     ctx.body = list
   }
 
