@@ -14,19 +14,20 @@ class UserService extends Service {
     const loginService = app.weapp.LoginService.create(request, response)
     const weapp_user = await loginService.check()
 
-    const user = await this.getOauthUser(weapp_user.userInfo)
+    return weapp_user.userInfo
+    // const user = await this.getOauthUser(weapp_user.userInfo)
 
-    const Info = Object.assign(
-      {
-        name: user.name,
-        avatar: user.avatar,
-        level: user.level,
-        id: user.id
-      },
-      weapp_user.userInfo
-    )
+    // const Info = Object.assign(
+    //   {
+    //     name: user.name,
+    //     avatar: user.avatar,
+    //     level: user.level,
+    //     id: user.id
+    //   },
+    //   weapp_user.userInfo
+    // )
 
-    return Info
+    // return Info
   }
 
   // oauth 获取用户

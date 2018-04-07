@@ -3,6 +3,19 @@ const crypto = require('crypto')
 const uuid = require('../utils/uuid')
 
 class contributeController extends Controller {
+  async list() {
+    const { ctx } = this
+    const { isActive } = ctx.query
+
+    let where = {}
+    if (isActive) where.isActive = isActive
+    if (isActive === 1 || isActive === true) where.rate = { $gt: 0 }
+
+    const data = await ctx.model.Contribute.findAll({
+      where
+    })
+    ctx.body = data
+  }
   async create() {
     const { ctx } = this
     const { type, tid, startDate, endDate, local, picUrl } = ctx.request.body
@@ -12,7 +25,8 @@ class contributeController extends Controller {
     const contribute = await ctx.model.Contribute.findOne({
       where: {
         picUrl
-      }
+      },
+      order: [['updated_at', 'DESC']]
     })
 
     if (contribute) {

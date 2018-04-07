@@ -22,7 +22,6 @@ module.exports = appInfo => {
     bucket: ''
   }
 
-
   config.redis = {
     client: {
       host: '127.0.0.1',
@@ -39,7 +38,6 @@ module.exports = appInfo => {
     appId: '', // your weapp appId
     appSecret: '', // weapp appSecret
   }
-
 
   config.security = {
     csrf: {

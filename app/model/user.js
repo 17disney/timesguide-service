@@ -42,7 +42,7 @@ module.exports = app => {
       },
       mark: {
         type: INTEGER,
-        defaultValue: 0
+        defaultValue: 50
       },
       exchange: {
         type: INTEGER,
