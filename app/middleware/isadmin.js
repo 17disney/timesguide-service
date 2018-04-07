@@ -7,7 +7,7 @@ module.exports = () => {
       ctx.body = { message: '登录已失效', errcode: ERROR_CODE.SEESION_FAIL }
       return
     }
-    ctx.userinfo = user
+    ctx.user = user
     await next()
   }
 }

@@ -35,6 +35,16 @@ class ExchangeController extends Controller {
     const userid = user.id
 
     if (action === EXCHANGE_ACTION_TYPE.GIVE) {
+      // 查询时间表
+      const timesguide = await ctx.model.Timesguide.findOne({
+        where: { id: tid }
+      })
+
+      if (!timesguide) {
+        ctx.body = { message: '时间表有误' }
+        return
+      }
+
       // 检查已领取的数量
       const available = await ctx.service.exchange.checkGiveAvailable(
         tid,
@@ -45,11 +55,21 @@ class ExchangeController extends Controller {
         return
       }
 
+      // 检查我的积分
+      const userMark = await ctx.service.user.getMark(userid)
+      if (userMark < timesguide.price) {
+        ctx.body = { message: `你的积分不足，无法领取，剩余积分${userMark}` }
+        return
+      }
+
       // 创建新的时间表入自己
       const timesguideChildren = await ctx.service.timesguide.createChildren(
         tid,
         userid
       )
+
+      await ctx.service.user.updateMark(userid, -timesguide.price)
+
       // 随机获取赠与人
       const targetInfo = await ctx.service.disney.getRandom()
 

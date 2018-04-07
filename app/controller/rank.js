@@ -5,6 +5,9 @@ class RankController extends Controller {
     const { ctx } = this
     
     const data =  await ctx.model.User.findAll({
+      where: {
+        level: 0
+      },
       attributes: ['id', 'name', 'avatar', 'mark'],
       order: [['mark', 'DESC']],
       limit: 20

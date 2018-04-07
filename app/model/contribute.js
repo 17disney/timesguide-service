@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
@@ -23,7 +25,13 @@ module.exports = app => {
     },
     {
       indexes: [],
-      getterMethods: {}
+      getterMethods: {
+        dateRang() {
+          const startDate = moment(this.startDate).format('YYYY.MM.DD')
+          const endDate = moment(this.endDate).format('MM.DD')
+          return startDate + '-' + endDate
+        }
+      }
     }
   )
   Contribute.associate = function() {

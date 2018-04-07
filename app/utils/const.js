@@ -33,7 +33,11 @@ const MESSAGE_TYPE = {
   TIPS: 2
 }
 
-const MAX_GIVE = 10
+const ERROR_CODE = {
+  SEESION_FAIL: 40001
+}
+
+const MAX_GIVE = 4
 
 module.exports = {
   MARK_RULE,
@@ -42,7 +46,8 @@ module.exports = {
   MAX_GIVE,
   MESSAGE_TYPE,
   EXCHANGE_STATUS,
-  TIMESGUIDE_CHILDREN_STATUS
+  TIMESGUIDE_CHILDREN_STATUS,
+  ERROR_CODE
 }
 
 /* ## 积分管理

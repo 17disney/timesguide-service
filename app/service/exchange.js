@@ -26,6 +26,31 @@ class ExchangeService extends Service {
     const available = MAX_GIVE - exchangeCount
     return available
   }
+
+  async createTimesguideChild(tid, userid) {
+    const { ctx } = this
+
+    // 创建新的时间表入自己
+    const timesguideChildren = await ctx.service.timesguide.createChildren(
+      tid,
+      userid
+    )
+
+    // 随机获取赠与人
+    const targetInfo = await ctx.service.disney.getRandom()
+
+    // 创建交易记录
+    const create = {
+      id,
+      eid: timesguideChildren.id,
+      tid,
+      userid,
+      targetUserid: targetInfo.id,
+      isComplate: true
+    }
+    await ctx.model.Exchange.create(create)
+
+  }
 }
 
 module.exports = ExchangeService

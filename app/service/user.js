@@ -14,20 +14,19 @@ class UserService extends Service {
     const loginService = app.weapp.LoginService.create(request, response)
     const weapp_user = await loginService.check()
 
-    return weapp_user.userInfo
-    // const user = await this.getOauthUser(weapp_user.userInfo)
+    if (!weapp_user.userInfo)  return false
 
-    // const Info = Object.assign(
-    //   {
-    //     name: user.name,
-    //     avatar: user.avatar,
-    //     level: user.level,
-    //     id: user.id
-    //   },
-    //   weapp_user.userInfo
-    // )
-
-    // return Info
+    const user = await this.getOauthUser(weapp_user.userInfo)
+    const Info = Object.assign(
+      {
+        name: user.name,
+        avatar: user.avatar,
+        level: user.level,
+        id: user.id
+      },
+      weapp_user.userInfo
+    )
+    return Info
   }
 
   // oauth 获取用户
@@ -154,7 +153,8 @@ class UserService extends Service {
     const user = await this.models.User.create({
       name: userInfo.nickName,
       avatar: userInfo.avatarUrl,
-      id: userInfo.id
+      id: userInfo.id,
+      mark: 200
     })
 
     const oauth = await this.models.SocialOauth.create({

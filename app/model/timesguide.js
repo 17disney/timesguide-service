@@ -13,7 +13,7 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 0
       },
-      picName: STRING(255),
+      picUrl: STRING(255),
       have: {
         type: INTEGER,
         defaultValue: 0
@@ -44,9 +44,6 @@ module.exports = app => {
         }
       ],
       getterMethods: {
-        picUrl() {
-          return 'http://cdn.17disney.com/' + this.picName
-        },
         dateRang() {
           const startDate = moment(this.startDate).format('YYYY.MM.DD')
           const endDate = moment(this.endDate).format('MM.DD')
@@ -54,7 +51,10 @@ module.exports = app => {
         },
         price() {
           const days = moment().diff(moment(this.startDate), 'days')
-          return 20 + Math.floor(days / 90) * 10
+          if (days <= 7) {
+            return 0
+          }
+          return 20 + Math.ceil(days / 90) * 10
         }
       }
     }
