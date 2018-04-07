@@ -1,6 +1,7 @@
 const Controller = require('egg').Controller
 const crypto = require('crypto')
 const uuid = require('../utils/uuid')
+const { MESSAGE_TYPE } = require('../utils/const')
 
 class contributeController extends Controller {
   async list() {
@@ -87,7 +88,7 @@ class contributeController extends Controller {
     const { ctx } = this
     const { id } = ctx.params
 
-    const { rate, startDate, endDate, local } = ctx.request.body
+    const { rate, startDate, endDate, local, picUrl } = ctx.request.body
 
     let { tid } = ctx.request.body
     const contribute = await ctx.model.Contribute.findOne({
@@ -99,30 +100,55 @@ class contributeController extends Controller {
       return
     }
 
-    const { userid } = contribute
-    const RATE_MARK = [0, 20, 40, 100, 120, 200]
+    const { userid, isActive } = contribute
 
-    if (tid) {
-      await ctx.model.Timesguide.update(
+    if (!userid) {
+      ctx.body = { message: '没有用户id' }
+      return
+    }
+
+    if (isActive) {
+      ctx.body = { message: '已经审核' }
+      return
+    }
+
+    if (rate === 0) {
+      await ctx.model.Contribute.update(
         {
-          userid,
-          picUrl
+          rate,
+          isActive: true
         },
         {
-          where: { tid }
+          where: { id }
         }
       )
+      const content = `很遗憾你提交的时间表 ${id.substr(0, 6)} 没有通过审核`
+      ctx.service.message.newMessage(content, userid, MESSAGE_TYPE.CONTRIBUTE)
+      ctx.body = { message: '审核完毕' }
+      return
     } else {
-      const newTimesguide = await ctx.model.Timesguide.create({
-        userid,
-        picUrl,
-        startDate,
-        endDate,
-        local,
-        rate
-      })
+      if (tid) {
+        await ctx.model.Timesguide.update(
+          {
+            userid,
+            picUrl
+          },
+          {
+            where: { id: tid }
+          }
+        )
+      } else {
+        const newTimesguide = await ctx.model.Timesguide.create({
+          userid,
+          picUrl,
+          startDate,
+          endDate,
+          local,
+          rate
+        })
 
-      tid = newTimesguide.id
+        tid = newTimesguide.id
+      }
     }
 
     await ctx.model.Contribute.update(
@@ -140,13 +166,16 @@ class contributeController extends Controller {
       }
     )
 
-    await ctx.model.User.updateMark(userid, RATE_MARK[rate])
+    const RATE_MARK = [0, 20, 40, 100, 120, 200]
+    await ctx.service.user.updateMark(userid, RATE_MARK[rate])
+    const content = `恭喜，你的时间表 ${id.substr(0, 6)} 通过审核，并获得 ${RATE_MARK[rate]} 点积分和 5 张该时间表！`
+    ctx.service.message.newMessage(content, userid, MESSAGE_TYPE.CONTRIBUTE)
 
-    for (i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       await ctx.service.exchange.createTimesguideChild(tid, userid)
     }
 
-    ctx.body = { id }
+    ctx.body = { message: '审核完毕' }
   }
 }
 

@@ -31,10 +31,10 @@ module.exports = app => {
 
   router.get('/v1/contributes', controller.contribute.list)
   router.get('/v1/contributes/:id', controller.contribute.id)
-  router.delete('/v1/contributes/:id',islogin, controller.contribute.deleteId)
+  router.delete('/v1/contributes/:id', islogin, controller.contribute.deleteId)
   router.post('/v1/contributes', islogin, controller.contribute.create)
 
-  router.put('/admin/contributes/:id', islogin, controller.contribute.active)
+  router.put('/admin/contributes/:id',isadmin, controller.contribute.active)
 
   router.get('/v1/upload/token', controller.upload.token)
 

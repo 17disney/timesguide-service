@@ -44,6 +44,8 @@ module.exports = appInfo => {
       enable: false,
     }
   }
+
+  config.adminKey = ''
  
   // add your config here
   config.middleware = []

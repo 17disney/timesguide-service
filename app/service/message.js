@@ -14,7 +14,7 @@ const uuid = require('../utils/uuid')
 // }
 
 class MessageService extends Service {
-  newMessage(content, userid) {
+  newMessage(content, userid, type = 0) {
     const {ctx} = this
     const create = {
       id: uuid(),

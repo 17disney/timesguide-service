@@ -29,8 +29,8 @@ const TIMESGUIDE_CHILDREN_STATUS = {
 
 const MESSAGE_TYPE = {
   DEFAULT: 0,
-  REWARD: 1,
-  TIPS: 2
+  EXCHANGE: 1,
+  CONTRIBUTE: 2
 }
 
 const ERROR_CODE = {

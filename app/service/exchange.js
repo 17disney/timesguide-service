@@ -1,5 +1,6 @@
 const Service = require('egg').Service
 const { MAX_GIVE } = require('../utils/const')
+const uuid = require('../utils/uuid')
 
 class ExchangeService extends Service {
   async create() {
@@ -41,7 +42,7 @@ class ExchangeService extends Service {
 
     // 创建交易记录
     const create = {
-      id,
+      id: uuid(),
       eid: timesguideChildren.id,
       tid,
       userid,
