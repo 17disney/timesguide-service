@@ -9,9 +9,11 @@ const uuid = require('../utils/uuid')
 
 class ExchangeController extends Controller {
   async list() {
+    const { ctx } = this
     this.ctx.body = 'hi, egg'
   }
   async id() {
+    const { ctx } = this
     this.ctx.body = 'hi, egg'
   }
 

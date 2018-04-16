@@ -14,8 +14,8 @@ class HomeController extends Controller {
     // await ctx.model.TimesguideChildren.sync({ force: true })
     // await ctx.model.Exchange.sync({ force: true })
     // await ctx.model.Contribute.sync({ force: true })
-
-    ctx.body = '17disney-timesguide-service'
+    const name = '17disney-timesguide-service'
+    ctx.body = { name }
   }
 }
 

@@ -3,6 +3,8 @@ const TIMESGUIDE_CDN_STYLES = {
     'imageMogr2/auto-orient/thumbnail/180x2000/gravity/North/crop/x350/format/webp/blur/1x0/quality/75|imageslim'
 }
 
+const RATE_MARK = [0, 30, 60, 100, 150, 200]
+
 const MARK_RULE = {
   EXCHANGE_WITH_USER: 10,
   EXCHANGE_WITH_NPC: -10
@@ -24,7 +26,9 @@ const EXCHANGE_STATUS = {
 const TIMESGUIDE_CHILDREN_STATUS = {
   DELETE: 0,
   OPEN: 1,
-  STARTED: 2 //交换中
+  STARTED: 2, // 交换中
+  EXCHANGED_USER: 3, // 已交换给玩家
+  EXCHANGED_NPC: 4 // 已交还给NPC
 }
 
 const MESSAGE_TYPE = {
@@ -41,6 +45,7 @@ const MAX_GIVE = 4
 
 module.exports = {
   MARK_RULE,
+  RATE_MARK,
   TIMESGUIDE_CDN_STYLES,
   EXCHANGE_ACTION_TYPE,
   MAX_GIVE,

@@ -1,7 +1,7 @@
 const Controller = require('egg').Controller
 const crypto = require('crypto')
 const uuid = require('../utils/uuid')
-const { MESSAGE_TYPE } = require('../utils/const')
+const { MESSAGE_TYPE, RATE_MARK } = require('../utils/const')
 
 class contributeController extends Controller {
   async list() {
@@ -166,7 +166,7 @@ class contributeController extends Controller {
       }
     )
 
-    const RATE_MARK = [0, 20, 40, 100, 120, 200]
+    
     await ctx.service.user.updateMark(userid, RATE_MARK[rate])
     const content = `恭喜，你的时间表 ${id.substr(0, 6)} 通过审核，并获得 ${RATE_MARK[rate]} 点积分和 5 张该时间表！`
     ctx.service.message.newMessage(content, userid, MESSAGE_TYPE.CONTRIBUTE)

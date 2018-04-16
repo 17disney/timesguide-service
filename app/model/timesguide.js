@@ -1,5 +1,15 @@
 const moment = require('moment')
 
+// 乐园时间表
+// 乐园指南：乐园指南、小镇指南、其它指南
+// 乐园门票：乐园门票、兑换券
+
+const TYPE = {
+  TIMES_GUIDE: 1,
+  PARK_GUIDE: 2,
+  TOWM: 3
+}
+
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
