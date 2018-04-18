@@ -1,6 +1,8 @@
 const moment = require('moment')
-const { TIMESGUIDE_CHILDREN_STATUS } = require('../utils/const')
+const { TIMESGUIDE_CHILDREN_STATUS, TIMESGUIDE_TYPE } = require('../utils/const')
 
+
+// 时间表子类
 module.exports = app => {
   const { STRING, TEXT, INTEGER, BOOLEAN, DATE } = app.Sequelize
 
@@ -13,6 +15,7 @@ module.exports = app => {
       },
       mediaUrl: STRING(255),
       oUserid: STRING(255),
+      type: TYPE.TIMESGUIDE,
       status: {
         type: INTEGER,
         defaultValue: TIMESGUIDE_CHILDREN_STATUS.OPEN,

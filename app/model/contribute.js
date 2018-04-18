@@ -27,9 +27,14 @@ module.exports = app => {
       indexes: [],
       getterMethods: {
         dateRang() {
-          const startDate = moment(this.startDate).format('YYYY.MM.DD')
+          const startYearDate = moment(this.startDate).format('YYYY.MM.DD')
+          const startDate = moment(this.endDate).format('MM.DD')
           const endDate = moment(this.endDate).format('MM.DD')
-          return startDate + '-' + endDate
+          if (startDate === endDate) {
+            return startYearDate
+          } else {
+            return startDate + '-' + endDate
+          }
         }
       }
     }

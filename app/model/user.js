@@ -20,6 +20,9 @@ module.exports = app => {
           isEmail: true
         }
       },
+      phoneNumber: {
+        type: STRING(255)
+      },
       avatar: {
         type: STRING(255),
         validate: {
