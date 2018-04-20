@@ -15,7 +15,7 @@ module.exports = app => {
       },
       mediaUrl: STRING(255),
       oUserid: STRING(255),
-      type: TYPE.TIMESGUIDE,
+      type: TIMESGUIDE_TYPE.TIMESGUIDE,
       status: {
         type: INTEGER,
         defaultValue: TIMESGUIDE_CHILDREN_STATUS.OPEN,
