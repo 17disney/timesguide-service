@@ -24,8 +24,8 @@ const EXCHANGE_STATUS = {
 }
 
 const TIMESGUIDE_CHILDREN_STATUS = {
-  DELETE: 0,
-  OPEN: 1,
+  DELETE: 0, // 已删除
+  OPEN: 1, // 拥有状态
   STARTED: 2, // 交换中
   EXCHANGED_USER: 3, // 已交换给玩家
   EXCHANGED_NPC: 4 // 已交还给NPC
