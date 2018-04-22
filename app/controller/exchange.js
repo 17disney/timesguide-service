@@ -10,7 +10,7 @@ const uuid = require('../utils/uuid')
 class ExchangeController extends Controller {
   async list() {
     const { ctx } = this
-    this.ctx.body = 'hi, egg'
+    ctx.body = await ctx.model.Exchange.findAll()
   }
   async id() {
     const { ctx } = this

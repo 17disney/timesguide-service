@@ -166,9 +166,10 @@ class contributeController extends Controller {
       }
     )
 
-    
     await ctx.service.user.updateMark(userid, RATE_MARK[rate])
-    const content = `恭喜，你的时间表 ${id.substr(0, 6)} 通过审核，并获得 ${RATE_MARK[rate]} 点积分和 5 张该时间表！`
+    const content = `恭喜，你的时间表 ${id.substr(0, 6)} 通过审核，并获得 ${
+      RATE_MARK[rate]
+    } 点积分和 5 张该时间表！`
     ctx.service.message.newMessage(content, userid, MESSAGE_TYPE.CONTRIBUTE)
 
     for (let i = 0; i < 5; i++) {
