@@ -88,7 +88,7 @@ class contributeController extends Controller {
     const { ctx } = this
     const { id } = ctx.params
 
-    const { rate, startDate, endDate, local, picUrl } = ctx.request.body
+    const { rate, startDate, endDate, local, picUrl, type } = ctx.request.body
 
     let { tid } = ctx.request.body
     const contribute = await ctx.model.Contribute.findOne({
@@ -131,7 +131,8 @@ class contributeController extends Controller {
         await ctx.model.Timesguide.update(
           {
             userid,
-            picUrl
+            picUrl,
+            rate
           },
           {
             where: { id: tid }
@@ -141,6 +142,7 @@ class contributeController extends Controller {
         const newTimesguide = await ctx.model.Timesguide.create({
           userid,
           picUrl,
+          type,
           startDate,
           endDate,
           local,
@@ -159,6 +161,7 @@ class contributeController extends Controller {
         endDate,
         local,
         rate,
+        type,
         isActive: true
       },
       {

@@ -18,6 +18,7 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 0
       },
+      type: INTEGER,
       isActive: {
         type: BOOLEAN,
         defaultValue: false
