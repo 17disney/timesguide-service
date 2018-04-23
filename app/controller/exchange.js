@@ -10,7 +10,42 @@ const uuid = require('../utils/uuid')
 class ExchangeController extends Controller {
   async list() {
     const { ctx } = this
-    ctx.body = await ctx.model.Exchange.findAll()
+    const countPerPage = 5
+    const { page = 0 } = ctx.query
+
+    ctx.body = await ctx.model.Exchange.findAll({
+      // where: {
+      //   isComplate: false
+      // },
+
+      limit: countPerPage,
+      offset: countPerPage * page,
+
+      include: [
+        {
+          model: ctx.model.Timesguide,
+          as: 'tidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        },
+        {
+          model: ctx.model.Timesguide,
+          as: 'targetTidInfo'
+          // attributes: ['picUrl', 'startDate', 'endDate']
+        },
+        {
+          model: ctx.model.User,
+          as: 'targetUserInfo',
+          attributes: ['id', 'name', 'avatar']
+        },
+        {
+          model: ctx.model.User,
+          as: 'userInfo',
+          attributes: ['id', 'name', 'avatar']
+        }
+      ],
+
+      order: [['updated_at', 'DESC']]
+    })
   }
   async id() {
     const { ctx } = this

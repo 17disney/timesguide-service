@@ -167,7 +167,13 @@ class userController extends Controller {
     const { ctx } = this
     const { userid } = ctx.params
 
+    const countPerPage = 5
+    const { page = 0 } = ctx.query
+
     const list = await ctx.model.Exchange.findAll({
+      limit: countPerPage,
+      offset: countPerPage * page,
+
       where: {
         $or: [{ userid }, { targetUserid: userid }]
       },

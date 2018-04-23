@@ -35,7 +35,7 @@ class TimesguideController extends Controller {
       include: [
         {
           model: ctx.model.User,
-          attributes: ['id', 'avatar', 'name']
+          attributes: ['id', 'avatar', 'name', 'type']
         },
         {
           model: ctx.model.TimesguideChildren,
