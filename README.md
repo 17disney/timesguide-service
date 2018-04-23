@@ -1,33 +1,11 @@
 # 17disney-timesguide-service
 
-
-
-## QuickStart
-
-<!-- add docs here for user -->
-
-see [egg docs][egg] for more detail.
-
-### Development
-
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
+```shell
+docker stop 17disney-timesguide-service \
+&& docker rm 17disney-timesguide-service \
+&& cd /app/timesguide-service \
+&& docker build -t 17disney-timesguide-service . \
+&& docker run -e TZ="Asia/Shanghai" -d -p 28101:7001 --name 17disney-timesguide-service \
+--mount type=bind,source=/app/config/17disney-timesguide-service,target=/app/config \
+17disney-timesguide-service npm run dev
 ```
-
-### Deploy
-
-```bash
-$ npm start
-$ npm stop
-```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
-
-
-[egg]: https://eggjs.org
