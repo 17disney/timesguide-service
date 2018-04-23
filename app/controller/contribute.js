@@ -50,6 +50,7 @@ class contributeController extends Controller {
     })
     ctx.body = { id }
   }
+  
   async create() {
     const { ctx } = this
     const { type, tid, startDate, endDate, local, picUrl } = ctx.request.body

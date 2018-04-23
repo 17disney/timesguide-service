@@ -7,7 +7,8 @@ class TimesguideController extends Controller {
     const { local = 'shanghai' } = ctx.query
     const list = await ctx.model.Timesguide.findAll({
       where: {
-        local
+        local,
+        rate: { $gt: 0 }
       },
       include: [
         {
@@ -99,7 +100,6 @@ class TimesguideController extends Controller {
         }
       ]
     })
-
 
     let list = []
     let check = new Set()
