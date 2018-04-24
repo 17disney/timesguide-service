@@ -100,7 +100,7 @@ class UserService extends Service {
     let { sex, city, province, country, aboutMe, birthday } = userprofile
     let { id, name, avatar, mark, exchange, contribute, collection } = user
 
-    name = name.replace(/ud83c[udc00-udfff]|ud83d[udc00-udfff]|[u2000-u2fff]/g, '')
+    
 
     const exchanges = await this.models.Exchange.count({
       where: {

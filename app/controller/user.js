@@ -15,7 +15,10 @@ class userController extends Controller {
     const userInfo = data.userInfo
 
     let nickName = userInfo.nickName
-    userInfo.nickName = umoji.emojiToUnicode(nickName)
+    nickName = umoji.emojiToUnicode(nickName)
+
+    userInfo.nickName = nickName.replace(/ud83c[udc00-udfff]|ud83d[udc00-udfff]|[u2000-u2fff]/g, '')
+
 
     const user = await ctx.service.user.getOauthUser(userInfo, 'WEAPP')
 
