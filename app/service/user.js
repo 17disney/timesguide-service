@@ -14,7 +14,7 @@ class UserService extends Service {
     const loginService = app.weapp.LoginService.create(request, response)
     const weapp_user = await loginService.check()
 
-    if (!weapp_user.userInfo)  return false
+    if (!weapp_user.userInfo) return false
 
     const user = await this.getOauthUser(weapp_user.userInfo)
     const Info = Object.assign(
@@ -99,6 +99,8 @@ class UserService extends Service {
 
     let { sex, city, province, country, aboutMe, birthday } = userprofile
     let { id, name, avatar, mark, exchange, contribute, collection } = user
+
+    name = name.replace(/ud83c[udc00-udfff]|ud83d[udc00-udfff]|[u2000-u2fff]/g, '')
 
     const exchanges = await this.models.Exchange.count({
       where: {

@@ -1,6 +1,7 @@
 const Controller = require('egg').Controller
 const crypto = require('crypto')
 const { TIMESGUIDE_CHILDREN_STATUS, ERROR_CODE } = require('../utils/const')
+const { umoji } = require('umoji')
 
 class userController extends Controller {
   async login() {
@@ -12,6 +13,10 @@ class userController extends Controller {
 
     const data = await loginService.login()
     const userInfo = data.userInfo
+
+    let nickName = userInfo.nickName
+    userInfo.nickName = umoji.emojiToUnicode(nickName)
+
     const user = await ctx.service.user.getOauthUser(userInfo, 'WEAPP')
 
     data.userInfo = Object.assign(
@@ -50,7 +55,7 @@ class userController extends Controller {
       })
     }
 
-    ctx.body = {message: '修改成功'}
+    ctx.body = { message: '修改成功' }
   }
 
   async info() {
