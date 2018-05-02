@@ -4,9 +4,7 @@ const uuid = require('../utils/uuid')
 
 // const MESSAGE_TYPE = {
 
-
 // }
-
 
 // const MESSAGE_CONTENT = {
 //   EXCHANGE_SUCCESS: ''
@@ -15,7 +13,7 @@ const uuid = require('../utils/uuid')
 
 class MessageService extends Service {
   newMessage(content, userid, type = 0) {
-    const {ctx} = this
+    const { ctx } = this
     const create = {
       id: uuid(),
       title: '提示',

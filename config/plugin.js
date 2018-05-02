@@ -32,3 +32,8 @@ exports.passport = {
   enable: true,
   package: 'egg-passport'
 }
+
+exports.cors = {
+  enable: true,
+  package: 'egg-cors'
+}
