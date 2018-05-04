@@ -41,6 +41,7 @@ module.exports = app => {
   router.get('/v1/timesguides-children/:id', controller.timesguideChildren.id)
   router.get('/v1/timesguides-children', controller.timesguideChildren.list)
   router.get('/v1/timesguides', controller.timesguide.list)
+  router.get('/v2/timesguides', controller.timesguide.listV2)
   router.post('/v1/timesguides', islogin, controller.timesguide.create)
   router.get('/v1/timesguides/:id', controller.timesguide.id)
   router.get('/v1/timesguides/:id/starteds', controller.timesguide.starteds)

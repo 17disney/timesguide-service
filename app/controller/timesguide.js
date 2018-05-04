@@ -24,6 +24,31 @@ class TimesguideController extends Controller {
     ctx.body = list
   }
 
+  async listV2() {
+    const { ctx } = this
+    const { local = 'shanghai', type, year } = ctx.query
+
+    const where = {
+      local,
+      type
+    }
+
+    const list = await ctx.model.Timesguide.findAll({
+      attributes: [
+        'id',
+        'type',
+        'started',
+        'have',
+        'picUrl',
+        'startDate',
+        'endDate'
+      ],
+      where,
+      order: [['startDate', 'ASC']]
+    })
+    ctx.body = list
+  }
+
   async id() {
     const { ctx } = this
     const { id } = ctx.params
