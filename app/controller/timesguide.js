@@ -26,7 +26,7 @@ class TimesguideController extends Controller {
 
   async listV2() {
     const { ctx } = this
-    const { local = 'shanghai', type, year } = ctx.query
+    const { local = 'shanghai', type } = ctx.query
 
     const where = {
       local,
@@ -37,6 +37,8 @@ class TimesguideController extends Controller {
       attributes: [
         'id',
         'type',
+        'rate',
+        'local',
         'started',
         'have',
         'picUrl',
@@ -93,7 +95,16 @@ class TimesguideController extends Controller {
   async uploadId() {
     const { ctx } = this
     const data = ctx.request.body
-    const { id, author, startDate, endDate, local, picName, rate } = data
+    const {
+      id,
+      author,
+      startDate,
+      endDate,
+      local,
+      picName,
+      rate,
+      picUrl
+    } = data
     const res = await ctx.model.Timesguide.update(
       {
         author,
@@ -101,7 +112,8 @@ class TimesguideController extends Controller {
         endDate,
         local,
         picName,
-        rate
+        rate,
+        picUrl
       },
       { where: { id } }
     )

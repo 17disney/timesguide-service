@@ -1,6 +1,5 @@
-'use strict'
-
 const Controller = require('egg').Controller
+const pkg = require('../../package.json')
 
 class HomeController extends Controller {
   async index() {
@@ -14,8 +13,8 @@ class HomeController extends Controller {
     // await ctx.model.TimesguideChildren.sync({ force: true })
     // await ctx.model.Exchange.sync({ force: true })
     // await ctx.model.Contribute.sync({ force: true })
-    const name = '17disney-timesguide-service'
-    ctx.body = { name }
+    const { name, version } = pkg
+    ctx.body = { name, version }
   }
 }
 

@@ -1,4 +1,3 @@
-'use strict'
 const qiniu = require('qiniu')
 const Controller = require('egg').Controller
 

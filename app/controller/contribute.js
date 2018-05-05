@@ -6,13 +6,16 @@ const { MESSAGE_TYPE, RATE_MARK } = require('../utils/const')
 class contributeController extends Controller {
   async list() {
     const { ctx } = this
-    const { isActive } = ctx.query
+    const { isActive, page = 0 } = ctx.query
+    const countPerPage = 20
 
     let where = {}
     if (isActive) where.isActive = isActive
     if (isActive === 1 || isActive === true) where.rate = { $gt: 0 }
 
     const data = await ctx.model.Contribute.findAll({
+      limit: countPerPage,
+      offset: countPerPage * page,
       include: [
         {
           model: ctx.model.User,
@@ -50,7 +53,7 @@ class contributeController extends Controller {
     })
     ctx.body = { id }
   }
-  
+
   async create() {
     const { ctx } = this
     const { type, tid, startDate, endDate, local, picUrl } = ctx.request.body
