@@ -1,9 +1,17 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: xank <xank@qq.com>  Blog：https://www.xank.cn
++-----------------------------------------------------------------------------------------------------------------------
+| Contribute 贡献控制器
+|
+*/
+
 const Controller = require('egg').Controller
 const crypto = require('crypto')
 const uuid = require('../utils/uuid')
 const { MESSAGE_TYPE, RATE_MARK } = require('../utils/const')
 
-class contributeController extends Controller {
+class ContributeController extends Controller {
   async list() {
     const { ctx } = this
     const { isActive, page = 0 } = ctx.query
@@ -187,4 +195,4 @@ class contributeController extends Controller {
   }
 }
 
-module.exports = contributeController
+module.exports = ContributeController

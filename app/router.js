@@ -23,6 +23,8 @@ module.exports = app => {
   router.get('/user/:userid/contributes', controller.user.contributes)
 
   router.get('/v1/rank', controller.rank.list)
+  router.get('/v1/groups', controller.group.list)
+  // router.get('/v1/tags', controller.tag.list)
 
   router.get('/v1/exchanges', controller.exchange.list)
   router.post('/v1/exchanges', islogin, controller.exchange.create)
