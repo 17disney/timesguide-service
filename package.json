@@ -26,6 +26,7 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.0.0",
+    "cross-env": "^5.2.0",
     "egg-bin": "^4.3.5",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.14.0",
@@ -37,7 +38,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --title=egg-server-e",
+    "start": "cross-env EGG_SERVER_ENV=local egg-scripts start --title=egg-server-e",
     "stop": "egg-scripts stop --title=egg-server-e",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
